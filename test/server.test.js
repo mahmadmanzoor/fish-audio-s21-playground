@@ -124,6 +124,7 @@ test("Vercel config serves public files and allows streamed synthesis", async ()
   const config = JSON.parse(
     await readFile(new URL("../vercel.json", import.meta.url), "utf8"),
   );
+  assert.equal(config.framework, null);
   assert.equal(config.outputDirectory, "public");
   assert.equal(config.functions["api/*.js"].maxDuration, 60);
 });

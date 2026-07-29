@@ -3,11 +3,11 @@ import { readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
-import tts from "./api/tts.js";
-import voices from "./api/voices.js";
+import tts from "../api/tts.js";
+import voices from "../api/voices.js";
 
 const PORT = Number(process.env.PORT || 3000);
-const PUBLIC = join(fileURLToPath(new URL(".", import.meta.url)), "public");
+const PUBLIC = join(fileURLToPath(new URL("../", import.meta.url)), "public");
 const FILES = new Map([
   ["/", "index.html"],
   ["/styles.css", "styles.css"],
