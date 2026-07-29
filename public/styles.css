@@ -23,8 +23,10 @@
   --radius-md: 18px;
   --radius-sm: 12px;
   --ease: cubic-bezier(.22, 1, .36, 1);
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   --page: min(1220px, calc(100% - 48px));
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  font-family: var(--font-body);
   color: var(--ink);
   background: var(--bg);
   color-scheme: light;
@@ -71,6 +73,8 @@ body {
   background:
     radial-gradient(circle at 76% -10%, var(--aqua-soft), transparent 30rem),
     var(--bg);
+  font-size: 1rem;
+  letter-spacing: -.012em;
   transition: color 240ms ease, background-color 240ms ease;
 }
 
@@ -126,6 +130,7 @@ p {
 h1,
 h2,
 h3 {
+  font-family: var(--font-display);
   text-wrap: balance;
 }
 
@@ -212,7 +217,17 @@ pre,
   backdrop-filter: blur(22px) saturate(140%);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   pointer-events: auto;
-  transition: transform 320ms var(--ease), opacity 220ms ease, background-color 240ms ease;
+  will-change: width, transform;
+  transition:
+    width 720ms var(--ease),
+    min-height 620ms var(--ease),
+    padding 620ms var(--ease),
+    gap 620ms var(--ease),
+    border-radius 620ms var(--ease),
+    transform 520ms var(--ease),
+    opacity 280ms ease,
+    background-color 240ms ease,
+    box-shadow 420ms ease;
 }
 
 .brand {
@@ -227,12 +242,26 @@ pre,
   text-decoration: none;
 }
 
+.brand > span:last-child {
+  max-width: 110px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 560ms var(--ease), opacity 320ms ease, transform 560ms var(--ease);
+}
+
+.brand:hover .brand-mark,
+.brand:focus-visible .brand-mark {
+  transform: scaleY(1.12);
+}
+
 .brand-mark,
 .button-bars {
   display: inline-flex;
   align-items: center;
   gap: 2px;
   height: 19px;
+  transform-origin: center;
+  transition: transform 300ms var(--ease);
 }
 
 .brand-mark i,
@@ -271,6 +300,9 @@ pre,
 }
 
 .nav-link {
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
   min-height: 44px;
   padding: 12px 16px;
   border-radius: 14px;
@@ -278,13 +310,23 @@ pre,
   font-size: .84rem;
   font-weight: 600;
   text-decoration: none;
-  transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
+  transition:
+    max-width 560ms var(--ease),
+    padding 560ms var(--ease),
+    opacity 300ms ease,
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 300ms var(--ease);
 }
 
 .nav-link:hover,
 .nav-link.is-current {
   color: var(--ink);
   background: var(--aqua-soft);
+}
+
+.nav-link:hover {
+  transform: translateY(-1px);
 }
 
 .nav-actions {
@@ -313,6 +355,11 @@ pre,
   color: var(--aqua);
   background: var(--aqua-soft);
   transform: translateY(-1px);
+}
+
+.theme-toggle:active,
+.menu-toggle:active {
+  transform: translateY(0) scale(.94);
 }
 
 .theme-toggle svg {
@@ -356,6 +403,11 @@ pre,
 .primary-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 28px var(--signal-soft);
+}
+
+.nav-cta:active,
+.primary-button:active {
+  transform: translateY(0) scale(.975);
 }
 
 .menu-toggle {
@@ -411,6 +463,14 @@ pre,
   font-size: 1.15rem;
   font-weight: 650;
   text-decoration: none;
+  transition: color 180ms ease, background-color 180ms ease, padding 260ms var(--ease);
+}
+
+.mobile-menu a:hover,
+.mobile-menu a:focus-visible {
+  padding-inline: 18px;
+  color: var(--aqua);
+  background: var(--aqua-soft);
 }
 
 .mobile-menu a[aria-current="page"]::after {
@@ -429,20 +489,20 @@ pre,
 }
 
 .nav-shell.is-compact .site-nav {
-  width: min(430px, calc(100% - 32px));
+  width: min(470px, calc(100% - 32px));
   min-height: 58px;
   padding: 7px 8px 7px 14px;
   border-radius: 19px;
-  animation: nav-settle 280ms var(--ease) both;
+  box-shadow: 0 16px 48px rgba(25, 54, 47, .13);
 }
 
 .nav-shell.is-compact .brand > span:last-child,
 .nav-shell.is-compact .nav-link:not(.is-current) {
-  display: none;
-}
-
-.nav-shell.is-compact .nav-links {
-  margin-left: 0;
+  max-width: 0;
+  padding-inline: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
 }
 
 .nav-shell.is-compact .nav-link {
@@ -452,13 +512,13 @@ pre,
 }
 
 .nav-shell.is-scrolling-down .site-nav {
-  transform: translateY(-5px) scale(.985);
+  transform: translateY(-3px) scale(.992);
 }
 
 .js [data-reveal] {
   opacity: 0;
-  transform: translateY(34px) scale(.992);
-  transition: opacity 700ms ease, transform 760ms var(--ease);
+  transform: translateY(28px) scale(.995);
+  transition: opacity 820ms ease, transform 900ms var(--ease);
 }
 
 .js [data-reveal].is-visible {
@@ -511,6 +571,7 @@ pre,
   font-size: .92rem;
   font-weight: 650;
   text-decoration: none;
+  transition: color 180ms ease;
 }
 
 .secondary-link span {
@@ -519,6 +580,10 @@ pre,
 
 .secondary-link:hover span {
   transform: translateX(4px);
+}
+
+.secondary-link:hover {
+  color: var(--aqua);
 }
 
 /* Home */
@@ -745,6 +810,7 @@ pre,
   padding: 34px 0;
   border-bottom: 1px solid var(--line);
   align-items: baseline;
+  transition: padding 320ms var(--ease), background-color 240ms ease;
 }
 
 .path-list article > span {
@@ -774,6 +840,11 @@ pre,
   transform: translateX(6px);
 }
 
+.path-list article:hover {
+  padding-inline: 10px;
+  background: linear-gradient(90deg, var(--aqua-soft), transparent 72%);
+}
+
 .path-list article:hover p {
   color: var(--ink-soft);
   transform: translateX(3px);
@@ -795,6 +866,7 @@ pre,
   gap: 22px;
   padding: 30px 0;
   border-bottom: 1px solid var(--line);
+  transition: padding 320ms var(--ease), background-color 240ms ease;
 }
 
 .process-list li > span {
@@ -821,6 +893,21 @@ pre,
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.process-list li:hover {
+  padding-inline: 10px;
+  background: linear-gradient(90deg, var(--signal-soft), transparent 72%);
+}
+
+.process-list li > span {
+  transition: color 220ms ease, background-color 220ms ease, transform 300ms var(--ease);
+}
+
+.process-list li:hover > span {
+  color: var(--signal-ink);
+  background: var(--signal);
+  transform: rotate(-5deg);
 }
 
 .final-cta {
@@ -876,9 +963,9 @@ pre,
   display: grid;
   grid-template-columns: 1.3fr .7fr;
   gap: 60px;
-  min-height: 570px;
-  padding-top: 170px;
-  padding-bottom: 80px;
+  min-height: 530px;
+  padding-top: 158px;
+  padding-bottom: 68px;
   align-items: end;
 }
 
@@ -909,6 +996,13 @@ pre,
   border-radius: var(--radius-lg);
   background: var(--surface);
   box-shadow: var(--shadow-soft);
+  transition: border-color 240ms ease, box-shadow 360ms ease, transform 420ms var(--ease);
+}
+
+.panel:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
 }
 
 .composer {
@@ -931,6 +1025,11 @@ pre,
     radial-gradient(circle at 95% 10%, rgba(255, 255, 255, .35), transparent 38%),
     var(--signal);
   border-color: transparent;
+}
+
+.launch-panel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 58px var(--signal-soft);
 }
 
 .launch-panel .model-label,
@@ -1104,7 +1203,12 @@ input::placeholder {
   font-size: .7rem;
   font-weight: 600;
   text-align: center;
-  transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms var(--ease);
+}
+
+.voice-tabs label:hover span {
+  color: var(--ink);
+  transform: translateY(-1px);
 }
 
 .voice-tabs input:checked + span {
@@ -1212,6 +1316,11 @@ summary {
   font-size: .76rem;
   font-weight: 620;
   cursor: pointer;
+  transition: color 180ms ease;
+}
+
+summary:hover {
+  color: var(--aqua);
 }
 
 .variation {
@@ -1321,6 +1430,13 @@ summary {
   background: var(--surface);
   box-shadow: var(--shadow-soft);
   animation: enter 420ms var(--ease) both;
+  transition: border-color 240ms ease, transform 340ms var(--ease), box-shadow 340ms ease;
+}
+
+.take:hover {
+  border-color: var(--aqua);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
 }
 
 .take-number {
@@ -1398,9 +1514,9 @@ summary {
 
 .guide-hero {
   max-width: 920px;
-  min-height: 700px;
-  padding-top: 190px;
-  padding-bottom: 100px;
+  min-height: 620px;
+  padding-top: 172px;
+  padding-bottom: 82px;
 }
 
 .guide-hero h1 {
@@ -1448,6 +1564,11 @@ summary {
   font-size: .84rem;
   text-decoration: none;
   transition: color 180ms ease, transform 180ms ease;
+}
+
+.guide-index nav a:focus-visible {
+  color: var(--aqua);
+  transform: translateX(4px);
 }
 
 .guide-index nav a:hover {
@@ -1553,6 +1674,14 @@ td {
   text-align: left;
 }
 
+tbody tr {
+  transition: background-color 180ms ease;
+}
+
+tbody tr:hover {
+  background: var(--aqua-soft);
+}
+
 th {
   color: var(--muted);
   font-size: .7rem;
@@ -1653,6 +1782,12 @@ pre {
   background: var(--surface);
   font-size: .8rem;
   line-height: 1.7;
+  transition: border-color 220ms ease, box-shadow 320ms ease;
+}
+
+pre:hover {
+  border-color: var(--aqua);
+  box-shadow: var(--shadow-soft);
 }
 
 pre code {
@@ -1666,9 +1801,9 @@ pre code {
 
 .about-hero,
 .cases-hero {
-  min-height: 760px;
-  padding-top: 190px;
-  padding-bottom: 110px;
+  min-height: 680px;
+  padding-top: 174px;
+  padding-bottom: 94px;
 }
 
 .about-hero h1,
@@ -1750,6 +1885,12 @@ pre code {
   gap: 24px;
   padding: 32px 0;
   border-bottom: 1px solid var(--line);
+  transition: padding 320ms var(--ease), background-color 240ms ease;
+}
+
+.value-list article:hover {
+  padding-inline: 10px;
+  background: linear-gradient(90deg, var(--aqua-soft), transparent 72%);
 }
 
 .value-list article > span {
@@ -1972,10 +2113,12 @@ pre code {
   color: var(--muted);
   font-size: .78rem;
   text-decoration: none;
+  transition: color 180ms ease, transform 220ms var(--ease);
 }
 
 .site-footer nav a:hover {
   color: var(--aqua);
+  transform: translateY(-2px);
 }
 
 @keyframes sonar-sweep {
@@ -1994,13 +2137,6 @@ pre code {
   from {
     opacity: 0;
     transform: translateY(16px);
-  }
-}
-
-@keyframes nav-settle {
-  from {
-    opacity: .7;
-    transform: translateY(-8px) scale(.97);
   }
 }
 
@@ -2110,6 +2246,10 @@ pre code {
 
   .nav-shell.is-compact .brand > span:last-child {
     display: inline;
+    max-width: 110px;
+    padding-inline: 0;
+    opacity: 1;
+    transform: none;
   }
 
   .nav-links,

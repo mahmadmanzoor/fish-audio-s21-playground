@@ -47,14 +47,17 @@ const nav = document.querySelector("[data-nav]");
 let ticking = false;
 let lastScrollY = scrollY;
 let movementTimer;
+let compact = scrollY > 140;
 
 function updateNav() {
   const currentScrollY = scrollY;
-  nav?.classList.toggle("is-compact", currentScrollY > 96);
-  nav?.classList.toggle("is-scrolling-down", currentScrollY > lastScrollY && currentScrollY > 160);
+  if (!compact && currentScrollY > 140) compact = true;
+  if (compact && currentScrollY < 64) compact = false;
+  nav?.classList.toggle("is-compact", compact);
+  nav?.classList.toggle("is-scrolling-down", currentScrollY > lastScrollY && currentScrollY > 180);
   lastScrollY = currentScrollY;
   clearTimeout(movementTimer);
-  movementTimer = setTimeout(() => nav?.classList.remove("is-scrolling-down"), 140);
+  movementTimer = setTimeout(() => nav?.classList.remove("is-scrolling-down"), 260);
   ticking = false;
 }
 
