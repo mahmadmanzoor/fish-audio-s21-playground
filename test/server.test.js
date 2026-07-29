@@ -83,25 +83,28 @@ test("rejects invalid ranges and conflicting voices", () => {
 test("sanitizes upstream errors", () => {
   assert.deepEqual(publicError({ statusCode: 401, body: "secret" }), {
     status: 401,
-    message: "Fish Audio rejected the API key.",
+    message: "The voice service rejected the API key.",
   });
   assert.deepEqual(publicError(new Error("internal details")), {
     status: 502,
-    message: "Fish Audio request failed.",
+    message: "Voice generation failed upstream.",
   });
 });
 
 test("the UI loads and missing configuration is reported safely", async () => {
-  const original = process.env.FISH_API_KEY;
+  const original = process.env.SIGNAL_TANK_API_KEY;
+  const legacy = process.env.FISH_API_KEY;
+  delete process.env.SIGNAL_TANK_API_KEY;
   delete process.env.FISH_API_KEY;
   const page = await readFile(new URL("../public/lab.html", import.meta.url), "utf8");
   assert.match(page, /Voice Lab — Signal Tank/);
 
   const response = await voices.fetch(new Request("http://localhost/api/voices"));
   assert.equal(response.status, 503);
-  assert.match((await response.json()).error, /FISH_API_KEY/);
+  assert.match((await response.json()).error, /SIGNAL_TANK_API_KEY/);
 
-  if (original) process.env.FISH_API_KEY = original;
+  if (original) process.env.SIGNAL_TANK_API_KEY = original;
+  if (legacy) process.env.FISH_API_KEY = legacy;
 });
 
 test("Vercel voice function rejects unsupported methods", async () => {
@@ -143,6 +146,10 @@ test("local server serves all clean page routes and shared assets", async () => 
       ["/lab/", "Voice Lab — Signal Tank"],
       ["/guide", "Evaluation Guide — Signal Tank"],
       ["/guide/", "Evaluation Guide — Signal Tank"],
+      ["/about", "About — Signal Tank"],
+      ["/about/", "About — Signal Tank"],
+      ["/use-cases", "Use Cases — Signal Tank"],
+      ["/use-cases/", "Use Cases — Signal Tank"],
       ["/styles.css", "--signal"],
       ["/site.js", "signal-tank-theme"],
       ["/app.js", "const form"],

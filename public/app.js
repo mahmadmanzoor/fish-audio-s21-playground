@@ -145,7 +145,7 @@ function addTake({ blob, firstByte, total, settings, script }) {
   summary.textContent = `${settings.voice} · ${settings.speed}× · ${settings.latency} · ${settings.format}`;
   const download = document.createElement("a");
   download.href = url;
-  download.download = `fish-s21-take-${takeCount}.${settings.format}`;
+  download.download = `signal-tank-take-${takeCount}.${settings.format}`;
   download.textContent = "Download";
   foot.append(summary, download);
 
@@ -163,7 +163,7 @@ form.addEventListener("submit", async (event) => {
 
   generate.disabled = true;
   generate.classList.add("loading");
-  setStatus("Sending script to S2.1 Pro…");
+  setStatus("Sending script to the voice engine…");
   const started = performance.now();
 
   try {

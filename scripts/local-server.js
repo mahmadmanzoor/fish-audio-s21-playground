@@ -14,6 +14,10 @@ const FILES = new Map([
   ["/lab/", "lab.html"],
   ["/guide", "guide.html"],
   ["/guide/", "guide.html"],
+  ["/about", "about.html"],
+  ["/about/", "about.html"],
+  ["/use-cases", "use-cases.html"],
+  ["/use-cases/", "use-cases.html"],
   ["/styles.css", "styles.css"],
   ["/site.js", "site.js"],
   ["/app.js", "app.js"],
@@ -73,6 +77,6 @@ export function createApp() {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   createApp().listen(PORT, "127.0.0.1", () => {
-    console.log(`Fish Audio lab: http://127.0.0.1:${PORT}`);
+    console.log(`Signal Tank: http://127.0.0.1:${PORT}`);
   });
 }

@@ -11,7 +11,7 @@ export default {
       });
     }
 
-    log("fish.voices.request", { requestId, self: true, pageSize: 100 });
+    log("signal.voices.request", { requestId, self: true, pageSize: 100 });
     try {
       const result = await fishClient().voices.search({
         page_size: 100,
@@ -20,7 +20,7 @@ export default {
         sort_by: "created_at",
       });
       const voices = (result.items || []).map(({ _id, title }) => ({ id: _id, title }));
-      log("fish.voices.response", {
+      log("signal.voices.response", {
         requestId,
         status: 200,
         count: voices.length,
@@ -29,14 +29,14 @@ export default {
       return Response.json({ voices }, { headers: responseHeaders(requestId) });
     } catch (error) {
       if (error.missingKey) {
-        log("fish.voices.error", { requestId, status: 503, reason: "missing_api_key" });
+        log("signal.voices.error", { requestId, status: 503, reason: "missing_api_key" });
         return Response.json(
-          { error: "Add FISH_API_KEY to your environment variables." },
+          { error: "Add SIGNAL_TANK_API_KEY to your environment variables." },
           { status: 503, headers: responseHeaders(requestId) },
         );
       }
       const safe = publicError(error);
-      log("fish.voices.error", { requestId, status: safe.status, message: safe.message });
+      log("signal.voices.error", { requestId, status: safe.status, message: safe.message });
       return Response.json(
         { error: safe.message },
         { status: safe.status, headers: responseHeaders(requestId) },

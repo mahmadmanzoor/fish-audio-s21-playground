@@ -21,11 +21,11 @@ export default {
       });
     }
     if (contentLength > MAX_REQUEST_BYTES) {
-      log("fish.tts.rejected", { requestId, status: 413, contentLength });
+      log("signal.tts.rejected", { requestId, status: 413, contentLength });
       return errorResponse(requestId, 413, "Request is too large.");
     }
     if (!request.headers.get("content-type")?.startsWith("multipart/form-data")) {
-      log("fish.tts.rejected", {
+      log("signal.tts.rejected", {
         requestId,
         status: 415,
         contentType: request.headers.get("content-type"),
@@ -36,7 +36,7 @@ export default {
     try {
       const form = await request.formData();
       const ttsRequest = buildTtsRequest(form);
-      log("fish.tts.request", { requestId, ...summarizeTts(form, ttsRequest) });
+      log("signal.tts.request", { requestId, ...summarizeTts(form, ttsRequest) });
 
       const { data, rawResponse } = await fishClient()
         .textToSpeech.convert(ttsRequest, MODEL, { abortSignal: request.signal })
@@ -44,7 +44,7 @@ export default {
       const contentType =
         rawResponse.headers.get("content-type") ||
         { mp3: "audio/mpeg", wav: "audio/wav", opus: "audio/ogg" }[ttsRequest.format];
-      log("fish.tts.response", {
+      log("signal.tts.response", {
         requestId,
         status: rawResponse.status,
         contentType,
@@ -58,7 +58,7 @@ export default {
           controller.enqueue(chunk);
         },
         flush() {
-          log("fish.tts.complete", {
+          log("signal.tts.complete", {
             requestId,
             bytes,
             durationMs: Math.round(performance.now() - started),
@@ -70,19 +70,18 @@ export default {
         status: 200,
         headers: {
           "Cache-Control": "no-store",
-          "Content-Disposition": `inline; filename="fish-s21.${ttsRequest.format}"`,
+          "Content-Disposition": `inline; filename="signal-tank.${ttsRequest.format}"`,
           "Content-Type": contentType,
-          "X-Fish-Model": MODEL,
           "X-Request-ID": requestId,
         },
       });
     } catch (error) {
       if (error.missingKey) {
-        log("fish.tts.error", { requestId, status: 503, reason: "missing_api_key" });
-        return errorResponse(requestId, 503, "Add FISH_API_KEY to your environment variables.");
+        log("signal.tts.error", { requestId, status: 503, reason: "missing_api_key" });
+        return errorResponse(requestId, 503, "Add SIGNAL_TANK_API_KEY to your environment variables.");
       }
       const safe = publicError(error);
-      log("fish.tts.error", {
+      log("signal.tts.error", {
         requestId,
         status: safe.status,
         message: safe.message,

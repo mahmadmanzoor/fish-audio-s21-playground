@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#eef4f1">
-    <meta name="description" content="Signal Tank is a focused playground for evaluating Fish Audio S2.1 Pro voices, latency, languages, and delivery.">
+    <meta name="description" content="Signal Tank is a complete voice-generation workspace for testing character, latency, languages, and delivery.">
     <title>Signal Tank — Hear the Model Before You Ship It</title>
     <script>
       (() => {
@@ -31,7 +31,9 @@
         <div class="nav-links">
           <a class="nav-link is-current" href="/" aria-current="page">Home</a>
           <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link" href="/use-cases">Use Cases</a>
           <a class="nav-link" href="/guide">Guide</a>
+          <a class="nav-link" href="/about">About</a>
         </div>
         <div class="nav-actions">
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
@@ -47,15 +49,17 @@
       <div class="mobile-menu" id="mobile-menu" hidden>
         <a href="/" aria-current="page">Home</a>
         <a href="/lab">Lab</a>
+        <a href="/use-cases">Use Cases</a>
         <a href="/guide">Guide</a>
-        <p>Evaluate Fish Audio S2.1 Pro without exposing your API key.</p>
+        <a href="/about">About</a>
+        <p>Shape, compare, and ship expressive voices without exposing your API key.</p>
       </div>
     </header>
 
     <main id="main">
       <section class="home-hero page-shell">
         <div class="hero-message">
-          <p class="model-label"><span></span> Fish Audio S2.1 Pro playground</p>
+          <p class="model-label"><span></span> Voice generation workspace</p>
           <h1>Hear the model<br>before you <em>ship it.</em></h1>
           <p class="hero-lede">A private evaluation space for voice character, multilingual delivery, latency, and instant cloning.</p>
           <div class="hero-actions">
@@ -72,12 +76,12 @@
           </div>
           <div class="sonar-readout">
             <span>Signal ready</span>
-            <span>S2.1 / PRO</span>
+            <span>Engine / 01</span>
           </div>
         </div>
       </section>
 
-      <section class="signal-stats" aria-label="Model evaluation capabilities">
+      <section class="signal-stats" aria-label="Voice evaluation capabilities" data-reveal>
         <div class="page-shell stat-row">
           <div><strong>83</strong><span>documented languages</span></div>
           <div><strong>3</strong><span>download formats</span></div>
@@ -85,7 +89,7 @@
         </div>
       </section>
 
-      <section class="home-section page-shell" aria-labelledby="evaluate-title">
+      <section class="home-section page-shell" aria-labelledby="evaluate-title" data-reveal>
         <div class="section-intro">
           <p class="section-number">01</p>
           <h2 id="evaluate-title">One model.<br>Three useful questions.</h2>
@@ -110,7 +114,7 @@
         </div>
       </section>
 
-      <section class="home-section process-section page-shell" aria-labelledby="process-title">
+      <section class="home-section process-section page-shell" aria-labelledby="process-title" data-reveal>
         <div class="section-intro">
           <p class="section-number">02</p>
           <h2 id="process-title">From text<br>to evidence.</h2>
@@ -122,7 +126,7 @@
         </ol>
       </section>
 
-      <section class="final-cta page-shell">
+      <section class="final-cta page-shell" data-reveal>
         <div>
           <p>Ready when you are.</p>
           <h2>Put a voice<br>in the tank.</h2>
@@ -140,7 +144,7 @@
         <span>Signal Tank</span>
       </a>
       <p>Built for careful listening. Your API key stays on the server.</p>
-      <nav aria-label="Footer navigation"><a href="/lab">Lab</a><a href="/guide">Guide</a></nav>
+      <nav aria-label="Footer navigation"><a href="/lab">Lab</a><a href="/use-cases">Use Cases</a><a href="/guide">Guide</a><a href="/about">About</a></nav>
     </footer>
   </body>
 </html>

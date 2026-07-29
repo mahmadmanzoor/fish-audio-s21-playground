@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-page="about">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef4f1">
+    <meta name="description" content="Signal Tank turns voice experimentation into a clear, repeatable product workflow.">
+    <title>About — Signal Tank</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("signal-tank-theme");
+          document.documentElement.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/site.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav-shell" data-nav>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Signal Tank home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>Signal Tank</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link" href="/use-cases">Use Cases</a>
+          <a class="nav-link" href="/guide">Guide</a>
+          <a class="nav-link is-current" href="/about" aria-current="page">About</a>
+        </div>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+            <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+            <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.2A8.5 8.5 0 0 1 8.8 3.6a8.5 8.5 0 1 0 11.6 11.6Z"></path></svg>
+          </button>
+          <a class="nav-cta" href="/lab">Open Lab <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="/">Home</a>
+        <a href="/lab">Lab</a>
+        <a href="/use-cases">Use Cases</a>
+        <a href="/guide">Guide</a>
+        <a href="/about" aria-current="page">About</a>
+        <p>Shape, compare, and ship expressive voices without exposing your API key.</p>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="about-hero page-shell">
+        <p class="model-label"><span></span> About Signal Tank</p>
+        <h1>Voice deserves<br>a room of <em>its own.</em></h1>
+        <p>Signal Tank is a focused product for hearing, shaping, and measuring generated speech before it reaches your users.</p>
+      </section>
+
+      <section class="about-statement" data-reveal>
+        <div class="page-shell">
+          <p class="section-number">Why it exists</p>
+          <blockquote>Choosing a voice should feel less like guessing—and more like listening with evidence.</blockquote>
+        </div>
+      </section>
+
+      <section class="about-section page-shell" data-reveal>
+        <div class="section-intro">
+          <p class="section-number">01</p>
+          <h2>Built for the<br>decision before launch.</h2>
+        </div>
+        <div class="about-copy">
+          <p>Voice changes how a product feels. Pace can make an agent sound calm or impatient. Pronunciation can build trust or lose it. Latency can make a conversation flow or stall.</p>
+          <p>Signal Tank keeps those variables together in one deliberate workspace, so teams can compare real outputs instead of discussing voice in the abstract.</p>
+        </div>
+      </section>
+
+      <section class="about-section values-section page-shell" data-reveal>
+        <div class="section-intro">
+          <p class="section-number">02</p>
+          <h2>Three product<br>principles.</h2>
+        </div>
+        <div class="value-list">
+          <article><span>01</span><div><h3>Listen first</h3><p>The audio is the product. Controls and metrics should make careful listening easier, not compete with it.</p></div></article>
+          <article><span>02</span><div><h3>Change one thing</h3><p>Useful comparisons come from controlled variation. Every take keeps its relevant settings visible.</p></div></article>
+          <article><span>03</span><div><h3>Protect the voice</h3><p>Credentials stay on the server, generated takes stay in the session, and cloning requires explicit consent.</p></div></article>
+        </div>
+      </section>
+
+      <section class="trust-band" data-reveal>
+        <div class="page-shell">
+          <div><strong>Session-only</strong><span>Generated takes disappear on refresh.</span></div>
+          <div><strong>Server-side</strong><span>Credentials never enter browser code.</span></div>
+          <div><strong>Consent-led</strong><span>Cloning requires speaker permission.</span></div>
+        </div>
+      </section>
+
+      <section class="final-cta page-shell" data-reveal>
+        <div><p>The room is ready.</p><h2>Bring your<br>first script.</h2></div>
+        <a class="orb-link" href="/lab" aria-label="Open the Signal Tank lab"><span>Open Lab</span><span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer page-shell">
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Signal Tank</span>
+      </a>
+      <p>Built for careful listening. Your API key stays on the server.</p>
+      <nav aria-label="Footer navigation"><a href="/lab">Lab</a><a href="/use-cases">Use Cases</a><a href="/guide">Guide</a></nav>
+    </footer>
+  </body>
+</html>

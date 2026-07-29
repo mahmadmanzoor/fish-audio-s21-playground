@@ -1,4 +1,5 @@
 const root = document.documentElement;
+root.classList.add("js");
 const storageKey = "signal-tank-theme";
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const systemTheme = matchMedia("(prefers-color-scheme: dark)");
@@ -44,9 +45,16 @@ systemTheme.addEventListener("change", (event) => {
 
 const nav = document.querySelector("[data-nav]");
 let ticking = false;
+let lastScrollY = scrollY;
+let movementTimer;
 
 function updateNav() {
-  nav?.classList.toggle("is-compact", scrollY > 96);
+  const currentScrollY = scrollY;
+  nav?.classList.toggle("is-compact", currentScrollY > 96);
+  nav?.classList.toggle("is-scrolling-down", currentScrollY > lastScrollY && currentScrollY > 160);
+  lastScrollY = currentScrollY;
+  clearTimeout(movementTimer);
+  movementTimer = setTimeout(() => nav?.classList.remove("is-scrolling-down"), 140);
   ticking = false;
 }
 
@@ -90,3 +98,20 @@ addEventListener("keydown", (event) => {
 matchMedia("(min-width: 761px)").addEventListener("change", (event) => {
   if (event.matches) closeMenu();
 });
+
+const revealItems = document.querySelectorAll("[data-reveal]");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+  revealItems.forEach((item) => item.classList.add("is-visible"));
+} else {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: .12, rootMargin: "0px 0px -8% 0px" });
+
+  revealItems.forEach((item) => observer.observe(item));
+}

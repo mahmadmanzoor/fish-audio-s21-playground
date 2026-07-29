@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-page="use-cases">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef4f1">
+    <meta name="description" content="Explore practical Signal Tank workflows for agents, narration, localization, and branded voices.">
+    <title>Use Cases — Signal Tank</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("signal-tank-theme");
+          document.documentElement.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/site.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to use cases</a>
+
+    <header class="nav-shell" data-nav>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Signal Tank home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>Signal Tank</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link is-current" href="/use-cases" aria-current="page">Use Cases</a>
+          <a class="nav-link" href="/guide">Guide</a>
+          <a class="nav-link" href="/about">About</a>
+        </div>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+            <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+            <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.2A8.5 8.5 0 0 1 8.8 3.6a8.5 8.5 0 1 0 11.6 11.6Z"></path></svg>
+          </button>
+          <a class="nav-cta" href="/lab">Open Lab <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="/">Home</a>
+        <a href="/lab">Lab</a>
+        <a href="/use-cases" aria-current="page">Use Cases</a>
+        <a href="/guide">Guide</a>
+        <a href="/about">About</a>
+        <p>Shape, compare, and ship expressive voices without exposing your API key.</p>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="cases-hero page-shell">
+        <p class="model-label"><span></span> Where Signal Tank fits</p>
+        <h1>One voice engine.<br><em>Many moments.</em></h1>
+        <p>Test the situations your users will actually hear—not just a polished demo line.</p>
+      </section>
+
+      <section class="case-rail page-shell" data-reveal>
+        <article>
+          <span class="case-index">01 / Agents</span>
+          <div class="case-title"><h2>Make response time<br>feel conversational.</h2><p>Compare normal, balanced, and low latency while listening for clarity and natural pacing.</p></div>
+          <div class="case-prompt"><span>Try this</span><p>“I found three options. Would you like the fastest, the most affordable, or the one people rate highest?”</p></div>
+        </article>
+        <article>
+          <span class="case-index">02 / Narration</span>
+          <div class="case-title"><h2>Find the voice<br>behind the story.</h2><p>Use direction tags and delivery controls to explore warmth, emphasis, pauses, and tempo.</p></div>
+          <div class="case-prompt"><span>Listen for</span><p>Breath between ideas, stable volume, believable emotion, and how longer sentences resolve.</p></div>
+        </article>
+        <article>
+          <span class="case-index">03 / Localization</span>
+          <div class="case-title"><h2>Carry intent<br>across languages.</h2><p>Evaluate pronunciation and rhythm using scripts reviewed by a fluent speaker.</p></div>
+          <div class="case-prompt"><span>Compare</span><p>The same product moment in English, Urdu, Spanish, and Arabic without changing other settings.</p></div>
+        </article>
+        <article>
+          <span class="case-index">04 / Brand voice</span>
+          <div class="case-title"><h2>Turn a voice<br>into a system.</h2><p>Compare saved references and approved recordings against the same repeatable script set.</p></div>
+          <div class="case-prompt"><span>Keep constant</span><p>Your reference script, output format, latency mode, and review criteria across every candidate.</p></div>
+        </article>
+      </section>
+
+      <section class="case-matrix page-shell" data-reveal>
+        <div class="section-intro">
+          <p class="section-number">Test matrix</p>
+          <h2>Four checks.<br>Every time.</h2>
+        </div>
+        <div class="matrix-grid">
+          <article><span>01</span><h3>Naturalness</h3><p>Does it sound spoken rather than rendered?</p></article>
+          <article><span>02</span><h3>Accuracy</h3><p>Are names, numbers, and key terms pronounced correctly?</p></article>
+          <article><span>03</span><h3>Latency</h3><p>Does the response arrive quickly enough for the moment?</p></article>
+          <article><span>04</span><h3>Consistency</h3><p>Does the voice hold its character across different scripts?</p></article>
+        </div>
+      </section>
+
+      <section class="final-cta page-shell" data-reveal>
+        <div><p>Start with a real moment.</p><h2>Make the first<br>comparison.</h2></div>
+        <a class="orb-link" href="/lab" aria-label="Open the Signal Tank lab"><span>Open Lab</span><span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer page-shell">
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Signal Tank</span>
+      </a>
+      <p>Built for careful listening. Your API key stays on the server.</p>
+      <nav aria-label="Footer navigation"><a href="/lab">Lab</a><a href="/guide">Guide</a><a href="/about">About</a></nav>
+    </footer>
+  </body>
+</html>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#eef4f1">
-    <meta name="description" content="Learn how to evaluate Fish Audio S2.1 Pro safely with Signal Tank.">
+    <meta name="description" content="Learn how to evaluate and integrate production voices safely with Signal Tank.">
     <title>Evaluation Guide — Signal Tank</title>
     <script>
       (() => {
@@ -31,7 +31,9 @@
         <div class="nav-links">
           <a class="nav-link" href="/">Home</a>
           <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link" href="/use-cases">Use Cases</a>
           <a class="nav-link is-current" href="/guide" aria-current="page">Guide</a>
+          <a class="nav-link" href="/about">About</a>
         </div>
         <div class="nav-actions">
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
@@ -47,8 +49,10 @@
       <div class="mobile-menu" id="mobile-menu" hidden>
         <a href="/">Home</a>
         <a href="/lab">Lab</a>
+        <a href="/use-cases">Use Cases</a>
         <a href="/guide" aria-current="page">Guide</a>
-        <p>Evaluate Fish Audio S2.1 Pro without exposing your API key.</p>
+        <a href="/about">About</a>
+        <p>Shape, compare, and ship expressive voices without exposing your API key.</p>
       </div>
     </header>
 
@@ -74,7 +78,7 @@
         </aside>
 
         <div class="guide-content">
-          <section id="quick-start">
+          <section id="quick-start" data-reveal>
             <p class="section-number">01</p>
             <h2>Quick start</h2>
             <p class="lead">Begin with the default voice. It gives you a clean baseline before reference selection changes the result.</p>
@@ -85,7 +89,7 @@
             </ol>
           </section>
 
-          <section id="voice-sources">
+          <section id="voice-sources" data-reveal>
             <p class="section-number">02</p>
             <h2>Choose the right voice source</h2>
             <div class="guide-table-wrap">
@@ -94,7 +98,7 @@
                 <tbody>
                   <tr><td>Default</td><td>First impressions</td><td>Nothing extra</td></tr>
                   <tr><td>Saved</td><td>Known account voices</td><td>A configured API key</td></tr>
-                  <tr><td>Voice ID</td><td>Saved or public references</td><td>A Fish Audio reference ID</td></tr>
+                  <tr><td>Voice ID</td><td>Saved or public references</td><td>A compatible reference ID</td></tr>
                   <tr><td>Instant clone</td><td>Zero-shot comparison</td><td>Approved audio and exact transcript</td></tr>
                 </tbody>
               </table>
@@ -105,7 +109,7 @@
             </div>
           </section>
 
-          <section id="test-plan">
+          <section id="test-plan" data-reveal>
             <p class="section-number">03</p>
             <h2>A small test plan that tells you something</h2>
             <div class="scenario-grid">
@@ -116,11 +120,11 @@
             </div>
           </section>
 
-          <section id="setup">
+          <section id="setup" data-reveal>
             <p class="section-number">04</p>
             <h2>Run it locally</h2>
             <p>Create <code>.env</code> in the repository root—the same folder as <code>package.json</code>.</p>
-            <pre><code>FISH_API_KEY=your_fish_audio_api_key
+            <pre><code>SIGNAL_TANK_API_KEY=your_voice_api_key
 PORT=3000</code></pre>
             <p>Then install and start the project:</p>
             <pre><code>npm install
@@ -128,7 +132,7 @@ npm start</code></pre>
             <p>Open <a href="http://127.0.0.1:3000">127.0.0.1:3000</a>. The browser never receives the API key.</p>
           </section>
 
-          <section id="integration">
+          <section id="integration" data-reveal>
             <p class="section-number">05</p>
             <h2>Call the local interface</h2>
             <p>The lab posts multipart form data to the server. A minimal browser request looks like this:</p>
@@ -145,14 +149,14 @@ const response = await fetch("/api/tts", {
 
 const audio = new Audio(URL.createObjectURL(await response.blob()));
 audio.play();</code></pre>
-            <p>Use <code>GET /api/voices</code> for account-owned voice IDs. The server fixes the upstream model to <code>s2.1-pro-free</code>.</p>
+            <p>Use <code>GET /api/voices</code> for account-owned voice IDs. Signal Tank keeps model selection and credentials on the server.</p>
           </section>
 
-          <section id="privacy">
+          <section id="privacy" data-reveal>
             <p class="section-number">06</p>
             <h2>Privacy and consent</h2>
             <p>Signal Tank does not persist scripts, generated audio, or uploaded reference recordings. Generated takes disappear when the page refreshes.</p>
-            <p>Fish Audio may retain free-tier requests. Do not submit confidential text, and clone a voice only when the speaker has explicitly approved that use.</p>
+            <p>An upstream processing partner may retain requests. Do not submit confidential text, and clone a voice only when the speaker has explicitly approved that use.</p>
           </section>
         </div>
       </div>
@@ -164,7 +168,7 @@ audio.play();</code></pre>
         <span>Signal Tank</span>
       </a>
       <p>Built for careful listening. Your API key stays on the server.</p>
-      <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/lab">Lab</a></nav>
+      <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/lab">Lab</a><a href="/use-cases">Use Cases</a><a href="/about">About</a></nav>
     </footer>
   </body>
 </html>
