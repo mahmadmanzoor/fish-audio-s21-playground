@@ -1,0 +1,13 @@
+{
+  "name": "fish-audio-s21-playground",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "fish-audio": "0.1.0"
+  }
+}
