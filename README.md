@@ -4,8 +4,12 @@ Signal Tank is a browser playground for evaluating Fish Audio's `s2.1-pro-free` 
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmahmadmanzoor%2Ffish-audio-s21-playground&env=FISH_API_KEY&envDescription=Fish%20Audio%20API%20key&envLink=https%3A%2F%2Ffish.audio%2Fapp%2Fapi-keys)
 
-The browser UI supports:
+The site includes:
 
+- A product overview at `/`
+- The complete evaluation workspace at `/lab`
+- A practical setup, testing, privacy, and integration guide at `/guide`
+- System-aware light and dark themes with a persistent theme toggle
 - Narration, agent, Urdu, Spanish, and Arabic sample scripts
 - Default voices, saved account voices, reference IDs, and instant voice cloning
 - Speed, volume, temperature, diversity, and latency controls
@@ -40,7 +44,7 @@ Start the local server:
 npm start
 ```
 
-Open [http://127.0.0.1:3000](http://127.0.0.1:3000).
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000), then choose **Open Lab**. You can also go directly to [http://127.0.0.1:3000/lab](http://127.0.0.1:3000/lab).
 
 The Node server reads the API key. Browser code cannot access it. Git ignores `.env`.
 
@@ -52,7 +56,7 @@ The Node server reads the API key. Browser code cannot access it. Git ignores `.
 4. Add `FISH_API_KEY` under **Environment Variables**. Enable it for Production and Preview.
 5. Deploy the project.
 
-Vercel serves the browser files from `public/` and deploys `api/voices.js` and `api/tts.js` as Node.js functions. Each push to `main` triggers a production deployment after you connect the repository.
+Vercel serves the browser files from `public/` with clean `/lab` and `/guide` URLs, and deploys `api/voices.js` and `api/tts.js` as Node.js functions. Each push to `main` triggers a production deployment after you connect the repository.
 
 You can also deploy with the Vercel CLI:
 

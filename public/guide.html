@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" data-page="guide">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef4f1">
+    <meta name="description" content="Learn how to evaluate Fish Audio S2.1 Pro safely with Signal Tank.">
+    <title>Evaluation Guide — Signal Tank</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("signal-tank-theme");
+          document.documentElement.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/site.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the guide</a>
+
+    <header class="nav-shell" data-nav>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Signal Tank home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>Signal Tank</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link is-current" href="/guide" aria-current="page">Guide</a>
+        </div>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+            <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+            <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.2A8.5 8.5 0 0 1 8.8 3.6a8.5 8.5 0 1 0 11.6 11.6Z"></path></svg>
+          </button>
+          <a class="nav-cta" href="/lab">Open Lab <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="/">Home</a>
+        <a href="/lab">Lab</a>
+        <a href="/guide" aria-current="page">Guide</a>
+        <p>Evaluate Fish Audio S2.1 Pro without exposing your API key.</p>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell">
+      <section class="guide-hero">
+        <p class="model-label"><span></span> Signal Tank field guide</p>
+        <h1>Listen with<br><em>a method.</em></h1>
+        <p>A practical route from your first generated line to a useful product decision.</p>
+      </section>
+
+      <div class="guide-layout">
+        <aside class="guide-index">
+          <p>On this page</p>
+          <nav aria-label="Guide sections">
+            <a href="#quick-start">Quick start</a>
+            <a href="#voice-sources">Voice sources</a>
+            <a href="#test-plan">Test plan</a>
+            <a href="#setup">Local setup</a>
+            <a href="#integration">Integration</a>
+            <a href="#privacy">Privacy</a>
+          </nav>
+          <a class="primary-button compact-button" href="/lab">Open Lab <span aria-hidden="true">↗</span></a>
+        </aside>
+
+        <div class="guide-content">
+          <section id="quick-start">
+            <p class="section-number">01</p>
+            <h2>Quick start</h2>
+            <p class="lead">Begin with the default voice. It gives you a clean baseline before reference selection changes the result.</p>
+            <ol class="guide-steps">
+              <li><span>1</span><div><h3>Use the narration preset</h3><p>Generate it unchanged and listen for clarity, pauses, warmth, and how the expression tags land.</p></div></li>
+              <li><span>2</span><div><h3>Change one variable</h3><p>Switch latency mode, speed, or voice—but only one at a time—so the comparison remains useful.</p></div></li>
+              <li><span>3</span><div><h3>Read the evidence</h3><p>Compare the audio with first-byte time, completion time, and output size in Session takes.</p></div></li>
+            </ol>
+          </section>
+
+          <section id="voice-sources">
+            <p class="section-number">02</p>
+            <h2>Choose the right voice source</h2>
+            <div class="guide-table-wrap">
+              <table>
+                <thead><tr><th>Source</th><th>Best for</th><th>What it needs</th></tr></thead>
+                <tbody>
+                  <tr><td>Default</td><td>First impressions</td><td>Nothing extra</td></tr>
+                  <tr><td>Saved</td><td>Known account voices</td><td>A configured API key</td></tr>
+                  <tr><td>Voice ID</td><td>Saved or public references</td><td>A Fish Audio reference ID</td></tr>
+                  <tr><td>Instant clone</td><td>Zero-shot comparison</td><td>Approved audio and exact transcript</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout">
+              <strong>For instant cloning</strong>
+              <p>Use a clean recording of at least 10 seconds. Signal Tank accepts up to 4 MB and requires confirmation that the speaker approved the clone.</p>
+            </div>
+          </section>
+
+          <section id="test-plan">
+            <p class="section-number">03</p>
+            <h2>A small test plan that tells you something</h2>
+            <div class="scenario-grid">
+              <article><span>A</span><h3>Naturalness</h3><p>Use a paragraph with short and long sentences, names, numbers, and at least one emotional direction.</p></article>
+              <article><span>B</span><h3>Agent response</h3><p>Use the conversational preset at normal and low latency. Listen for pace as well as total response time.</p></article>
+              <article><span>C</span><h3>Multilingual</h3><p>Test content written by a fluent speaker. Check pronunciation, rhythm, and whether expression survives translation.</p></article>
+              <article><span>D</span><h3>Delivery range</h3><p>Hold the voice constant while changing speed, temperature, and diversity in small increments.</p></article>
+            </div>
+          </section>
+
+          <section id="setup">
+            <p class="section-number">04</p>
+            <h2>Run it locally</h2>
+            <p>Create <code>.env</code> in the repository root—the same folder as <code>package.json</code>.</p>
+            <pre><code>FISH_API_KEY=your_fish_audio_api_key
+PORT=3000</code></pre>
+            <p>Then install and start the project:</p>
+            <pre><code>npm install
+npm start</code></pre>
+            <p>Open <a href="http://127.0.0.1:3000">127.0.0.1:3000</a>. The browser never receives the API key.</p>
+          </section>
+
+          <section id="integration">
+            <p class="section-number">05</p>
+            <h2>Call the local interface</h2>
+            <p>The lab posts multipart form data to the server. A minimal browser request looks like this:</p>
+            <pre><code>const form = new FormData();
+form.set("text", "Hello from Signal Tank.");
+form.set("voiceMode", "default");
+form.set("format", "mp3");
+form.set("latency", "balanced");
+
+const response = await fetch("/api/tts", {
+  method: "POST",
+  body: form,
+});
+
+const audio = new Audio(URL.createObjectURL(await response.blob()));
+audio.play();</code></pre>
+            <p>Use <code>GET /api/voices</code> for account-owned voice IDs. The server fixes the upstream model to <code>s2.1-pro-free</code>.</p>
+          </section>
+
+          <section id="privacy">
+            <p class="section-number">06</p>
+            <h2>Privacy and consent</h2>
+            <p>Signal Tank does not persist scripts, generated audio, or uploaded reference recordings. Generated takes disappear when the page refreshes.</p>
+            <p>Fish Audio may retain free-tier requests. Do not submit confidential text, and clone a voice only when the speaker has explicitly approved that use.</p>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer page-shell">
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Signal Tank</span>
+      </a>
+      <p>Built for careful listening. Your API key stays on the server.</p>
+      <nav aria-label="Footer navigation"><a href="/">Home</a><a href="/lab">Lab</a></nav>
+    </footer>
+  </body>
+</html>

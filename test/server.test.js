@@ -9,6 +9,7 @@ import {
   publicError,
   summarizeTts,
 } from "../lib/fish.js";
+import { createApp } from "../scripts/local-server.js";
 
 function validForm() {
   const form = new FormData();
@@ -93,8 +94,8 @@ test("sanitizes upstream errors", () => {
 test("the UI loads and missing configuration is reported safely", async () => {
   const original = process.env.FISH_API_KEY;
   delete process.env.FISH_API_KEY;
-  const page = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
-  assert.match(page, /Fish Audio S2\.1 Pro Lab/);
+  const page = await readFile(new URL("../public/lab.html", import.meta.url), "utf8");
+  assert.match(page, /Voice Lab — Signal Tank/);
 
   const response = await voices.fetch(new Request("http://localhost/api/voices"));
   assert.equal(response.status, 503);
@@ -126,5 +127,35 @@ test("Vercel config serves public files and allows streamed synthesis", async ()
   );
   assert.equal(config.framework, null);
   assert.equal(config.outputDirectory, "public");
+  assert.equal(config.cleanUrls, true);
   assert.equal(config.functions["api/*.js"].maxDuration, 60);
+});
+
+test("local server serves all clean page routes and shared assets", async () => {
+  const server = createApp();
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address();
+
+  try {
+    for (const [path, expected] of [
+      ["/", "Hear the Model Before You Ship It"],
+      ["/lab", "Voice Lab — Signal Tank"],
+      ["/lab/", "Voice Lab — Signal Tank"],
+      ["/guide", "Evaluation Guide — Signal Tank"],
+      ["/guide/", "Evaluation Guide — Signal Tank"],
+      ["/styles.css", "--signal"],
+      ["/site.js", "signal-tank-theme"],
+      ["/app.js", "const form"],
+    ]) {
+      const response = await fetch(`http://127.0.0.1:${port}${path}`);
+      assert.equal(response.status, 200, path);
+      assert.match(await response.text(), new RegExp(expected), path);
+    }
+
+    const missing = await fetch(`http://127.0.0.1:${port}/missing`);
+    assert.equal(missing.status, 404);
+    assert.deepEqual(await missing.json(), { error: "Not found." });
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
 });

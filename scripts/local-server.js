@@ -10,7 +10,12 @@ const PORT = Number(process.env.PORT || 3000);
 const PUBLIC = join(fileURLToPath(new URL("../", import.meta.url)), "public");
 const FILES = new Map([
   ["/", "index.html"],
+  ["/lab", "lab.html"],
+  ["/lab/", "lab.html"],
+  ["/guide", "guide.html"],
+  ["/guide/", "guide.html"],
   ["/styles.css", "styles.css"],
+  ["/site.js", "site.js"],
   ["/app.js", "app.js"],
 ]);
 const TYPES = {

@@ -42,8 +42,12 @@ function setVoiceMode(mode) {
 
 document.querySelectorAll(".preset").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".preset").forEach((item) => item.classList.remove("active"));
+    document.querySelectorAll(".preset").forEach((item) => {
+      item.classList.remove("active");
+      item.setAttribute("aria-pressed", "false");
+    });
     button.classList.add("active");
+    button.setAttribute("aria-pressed", "true");
     text.value = presets[button.dataset.preset];
     updateCount();
     text.focus();
@@ -205,7 +209,10 @@ form.addEventListener("submit", async (event) => {
       },
     });
     setStatus(`Take ${takeCount} ready in ${Math.round(total)} ms.`);
-    document.querySelector("#results-title").scrollIntoView({ behavior: "smooth", block: "start" });
+    document.querySelector("#results-title").scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
   } catch (error) {
     setStatus(error.message, true);
   } finally {

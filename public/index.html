@@ -1,211 +1,146 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page="home">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="dark">
-    <meta name="description" content="A local evaluation playground for Fish Audio S2.1 Pro.">
-    <title>Signal Tank — Fish Audio S2.1 Pro Lab</title>
+    <meta name="theme-color" content="#eef4f1">
+    <meta name="description" content="Signal Tank is a focused playground for evaluating Fish Audio S2.1 Pro voices, latency, languages, and delivery.">
+    <title>Signal Tank — Hear the Model Before You Ship It</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("signal-tank-theme");
+          document.documentElement.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="/styles.css">
-    <script type="module" src="/app.js"></script>
+    <script type="module" src="/site.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to the lab</a>
-    <div class="grain" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Signal Tank home">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <span>SIGNAL TANK</span>
-      </a>
-      <div class="model-stamp">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span>S2.1 PRO FREE</span>
-        <span class="muted">LOCAL LAB / 01</span>
+    <header class="nav-shell" data-nav>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="Signal Tank home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span>Signal Tank</span>
+        </a>
+        <div class="nav-links">
+          <a class="nav-link is-current" href="/" aria-current="page">Home</a>
+          <a class="nav-link" href="/lab">Lab</a>
+          <a class="nav-link" href="/guide">Guide</a>
+        </div>
+        <div class="nav-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+            <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>
+            <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 15.2A8.5 8.5 0 0 1 8.8 3.6a8.5 8.5 0 1 0 11.6 11.6Z"></path></svg>
+          </button>
+          <a class="nav-cta" href="/lab">Open Lab <span aria-hidden="true">↗</span></a>
+          <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+            <span></span><span></span>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="/" aria-current="page">Home</a>
+        <a href="/lab">Lab</a>
+        <a href="/guide">Guide</a>
+        <p>Evaluate Fish Audio S2.1 Pro without exposing your API key.</p>
       </div>
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <div>
-          <p class="eyebrow">FISH AUDIO EVALUATION CONSOLE</p>
-          <h1 id="hero-title">Give language<br><em>a pulse.</em></h1>
+      <section class="home-hero page-shell">
+        <div class="hero-message">
+          <p class="model-label"><span></span> Fish Audio S2.1 Pro playground</p>
+          <h1>Hear the model<br>before you <em>ship it.</em></h1>
+          <p class="hero-lede">A private evaluation space for voice character, multilingual delivery, latency, and instant cloning.</p>
+          <div class="hero-actions">
+            <a class="primary-button" href="/lab">Start testing <span aria-hidden="true">↗</span></a>
+            <a class="secondary-link" href="/guide">Read the guide <span aria-hidden="true">→</span></a>
+          </div>
         </div>
-        <div class="hero-copy">
-          <p>Test voice character, pacing, expression, multilingual delivery, and response time without exposing your API key to the browser.</p>
-          <div class="signal-line" aria-hidden="true">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+
+        <div class="sonar-stage" aria-label="Decorative sonar visualization representing a live audio signal">
+          <div class="sonar-halo" aria-hidden="true">
+            <i></i><i></i><i></i>
+            <span class="sonar-core"></span>
+            <span class="sonar-sweep"></span>
+          </div>
+          <div class="sonar-readout">
+            <span>Signal ready</span>
+            <span>S2.1 / PRO</span>
           </div>
         </div>
       </section>
 
-      <form id="lab-form" class="lab-grid">
-        <section class="panel composer" aria-labelledby="script-title">
-          <div class="panel-head">
-            <div>
-              <span class="panel-number">01</span>
-              <h2 id="script-title">Script</h2>
-            </div>
-            <output id="character-count" for="text">0 chars</output>
-          </div>
-
-          <div class="preset-row" aria-label="Script presets">
-            <button type="button" class="chip preset active" data-preset="narration">Narration</button>
-            <button type="button" class="chip preset" data-preset="agent">Agent</button>
-            <button type="button" class="chip preset" data-preset="urdu">Urdu</button>
-            <button type="button" class="chip preset" data-preset="spanish">Spanish</button>
-            <button type="button" class="chip preset" data-preset="arabic">Arabic</button>
-          </div>
-
-          <label class="sr-only" for="text">Text to synthesize</label>
-          <textarea id="text" name="text" rows="10" required spellcheck="true">[warm] There is a moment, just before a new idea takes shape, when possibility feels almost electric. [chuckle] That is usually the moment worth following.</textarea>
-
-          <div class="tag-row">
-            <span>Insert direction</span>
-            <button type="button" class="tag" data-tag="[warm]">warm</button>
-            <button type="button" class="tag" data-tag="[happy]">happy</button>
-            <button type="button" class="tag" data-tag="[whisper]">whisper</button>
-            <button type="button" class="tag" data-tag="[chuckle]">chuckle</button>
-            <button type="button" class="tag" data-tag="[emphasis]">emphasis</button>
-          </div>
-        </section>
-
-        <section class="panel voice-panel" aria-labelledby="voice-title">
-          <div class="panel-head">
-            <div>
-              <span class="panel-number">02</span>
-              <h2 id="voice-title">Voice source</h2>
-            </div>
-            <button id="refresh-voices" class="text-button" type="button">Refresh voices</button>
-          </div>
-
-          <fieldset class="voice-tabs">
-            <legend class="sr-only">Choose one voice source</legend>
-            <label><input type="radio" name="voiceMode" value="default" checked><span>Default</span></label>
-            <label><input type="radio" name="voiceMode" value="saved"><span>Saved</span></label>
-            <label><input type="radio" name="voiceMode" value="id"><span>Voice ID</span></label>
-            <label><input type="radio" name="voiceMode" value="clone"><span>Instant clone</span></label>
-          </fieldset>
-
-          <div class="voice-content">
-            <div class="voice-mode" data-mode="default">
-              <p class="mode-title">Let Fish Audio choose</p>
-              <p class="muted">Useful for hearing the model before choosing a specific voice.</p>
-            </div>
-
-            <div class="voice-mode" data-mode="saved" hidden>
-              <label for="saved-voice">Your saved voices</label>
-              <select id="saved-voice" disabled>
-                <option value="">Loading voices…</option>
-              </select>
-              <p id="voices-note" class="field-note">Read-only: this lab cannot create or delete voices.</p>
-            </div>
-
-            <div class="voice-mode" data-mode="id" hidden>
-              <label for="voice-id">Fish Audio reference ID</label>
-              <input id="voice-id" type="text" autocomplete="off" placeholder="802e3bc2b27e49c2995d23ef70e6ac89" disabled>
-            </div>
-
-            <div class="voice-mode" data-mode="clone" hidden>
-              <label for="reference-audio">Reference recording</label>
-              <input id="reference-audio" type="file" accept="audio/*" disabled>
-              <p class="field-note">A clean recording of at least 10 seconds works best. Maximum 4 MB on Vercel.</p>
-
-              <label for="reference-text">Exact words spoken</label>
-              <textarea id="reference-text" rows="3" placeholder="Transcribe the recording exactly…" disabled></textarea>
-
-              <label class="consent">
-                <input id="consent" type="checkbox" value="yes" disabled>
-                <span>I have the speaker’s permission to clone this voice.</span>
-              </label>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel controls-panel" aria-labelledby="controls-title">
-          <div class="panel-head">
-            <div>
-              <span class="panel-number">03</span>
-              <h2 id="controls-title">Delivery</h2>
-            </div>
-            <span class="muted mono">CALIBRATE</span>
-          </div>
-
-          <div class="control-grid">
-            <label class="range-control">
-              <span>Speed <output id="speed-value" for="speed">1.00×</output></span>
-              <input id="speed" name="speed" type="range" min="0.5" max="2" step="0.05" value="1">
-            </label>
-            <label class="range-control">
-              <span>Volume <output id="volume-value" for="volume">0 dB</output></span>
-              <input id="volume" name="volume" type="range" min="-20" max="20" step="1" value="0">
-            </label>
-            <label>
-              <span>Latency mode</span>
-              <select id="latency" name="latency">
-                <option value="normal">Normal · quality</option>
-                <option value="balanced">Balanced</option>
-                <option value="low">Low · speed</option>
-              </select>
-            </label>
-            <label>
-              <span>Audio format</span>
-              <select id="format" name="format">
-                <option value="mp3">MP3</option>
-                <option value="wav">WAV</option>
-                <option value="opus">Opus</option>
-              </select>
-            </label>
-          </div>
-
-          <details>
-            <summary>Model variation</summary>
-            <div class="control-grid variation">
-              <label class="range-control">
-                <span>Temperature <output id="temperature-value" for="temperature">0.70</output></span>
-                <input id="temperature" name="temperature" type="range" min="0" max="1" step="0.05" value="0.7">
-              </label>
-              <label class="range-control">
-                <span>Diversity <output id="topP-value" for="topP">0.70</output></span>
-                <input id="topP" name="topP" type="range" min="0" max="1" step="0.05" value="0.7">
-              </label>
-            </div>
-          </details>
-        </section>
-
-        <aside class="launch-panel" aria-label="Generate speech">
-          <div>
-            <p class="eyebrow">READY CHANNEL</p>
-            <p class="launch-copy">Your key stays behind the local server. Generated audio is kept only in this browser session.</p>
-          </div>
-          <button id="generate" class="generate-button" type="submit">
-            <span>Generate signal</span>
-            <span class="button-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          </button>
-          <p id="status" class="status" role="status" aria-live="polite">Waiting for a script.</p>
-        </aside>
-      </form>
-
-      <section class="results" aria-labelledby="results-title">
-        <div class="results-head">
-          <div>
-            <span class="panel-number">04</span>
-            <h2 id="results-title">Session takes</h2>
-          </div>
-          <p class="muted">Newest first · cleared on refresh</p>
+      <section class="signal-stats" aria-label="Model evaluation capabilities">
+        <div class="page-shell stat-row">
+          <div><strong>83</strong><span>documented languages</span></div>
+          <div><strong>3</strong><span>download formats</span></div>
+          <div><strong>1</strong><span>server-protected key</span></div>
         </div>
-        <div id="result-list" class="result-list">
-          <div id="empty-results" class="empty-results">
-            <span>NO SIGNALS CAPTURED</span>
-            <p>Your generated takes and latency readings will appear here.</p>
-          </div>
+      </section>
+
+      <section class="home-section page-shell" aria-labelledby="evaluate-title">
+        <div class="section-intro">
+          <p class="section-number">01</p>
+          <h2 id="evaluate-title">One model.<br>Three useful questions.</h2>
+          <p>Move from first impression to an integration decision without leaving the browser.</p>
         </div>
+        <div class="path-list">
+          <article>
+            <span>Character</span>
+            <h3>Does it sound right?</h3>
+            <p>Compare narration, conversational delivery, expression tags, and voice references.</p>
+          </article>
+          <article>
+            <span>Reach</span>
+            <h3>Does it travel well?</h3>
+            <p>Use editable Urdu, Spanish, Arabic, and English samples to hear multilingual delivery.</p>
+          </article>
+          <article>
+            <span>Response</span>
+            <h3>Is it fast enough?</h3>
+            <p>Capture approximate first-byte and total generation time for every take.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="home-section process-section page-shell" aria-labelledby="process-title">
+        <div class="section-intro">
+          <p class="section-number">02</p>
+          <h2 id="process-title">From text<br>to evidence.</h2>
+        </div>
+        <ol class="process-list">
+          <li><span>01</span><div><h3>Choose a script</h3><p>Start with a preset or write something that matches your product.</p></div></li>
+          <li><span>02</span><div><h3>Set the voice</h3><p>Use the default, a saved voice, a reference ID, or an approved recording.</p></div></li>
+          <li><span>03</span><div><h3>Compare the takes</h3><p>Listen, inspect timing and file size, then download the strongest result.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="final-cta page-shell">
+        <div>
+          <p>Ready when you are.</p>
+          <h2>Put a voice<br>in the tank.</h2>
+        </div>
+        <a class="orb-link" href="/lab" aria-label="Open the Signal Tank lab">
+          <span>Open Lab</span>
+          <span aria-hidden="true">↗</span>
+        </a>
       </section>
     </main>
 
-    <footer>
-      <span>LOCAL EVALUATION TOOL</span>
-      <p>Free-tier requests may be retained by Fish Audio. Do not submit sensitive text or unapproved voice recordings.</p>
+    <footer class="site-footer page-shell">
+      <a class="brand footer-brand" href="/">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>Signal Tank</span>
+      </a>
+      <p>Built for careful listening. Your API key stays on the server.</p>
+      <nav aria-label="Footer navigation"><a href="/lab">Lab</a><a href="/guide">Guide</a></nav>
     </footer>
   </body>
 </html>
