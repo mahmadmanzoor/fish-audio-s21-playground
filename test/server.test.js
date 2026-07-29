@@ -1,7 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { buildTtsRequest, listVoices, publicError, summarizeTts } from "../server.js";
+import tts from "../api/tts.js";
+import voices from "../api/voices.js";
+import {
+  MAX_REFERENCE_BYTES,
+  buildTtsRequest,
+  publicError,
+  summarizeTts,
+} from "../lib/fish.js";
 
 function validForm() {
   const form = new FormData();
@@ -60,6 +67,16 @@ test("rejects invalid ranges and conflicting voices", () => {
   conflicting.set("referenceId", "voice-id");
   conflicting.set("referenceAudio", new File(["audio"], "voice.wav", { type: "audio/wav" }));
   assert.throws(() => buildTtsRequest(conflicting), /not both/);
+
+  const oversized = validForm();
+  oversized.set("voiceMode", "clone");
+  oversized.set(
+    "referenceAudio",
+    new File([new Uint8Array(MAX_REFERENCE_BYTES + 1)], "voice.wav", { type: "audio/wav" }),
+  );
+  oversized.set("referenceText", "Reference.");
+  oversized.set("consent", "yes");
+  assert.throws(() => buildTtsRequest(oversized), /4 MB or smaller/);
 });
 
 test("sanitizes upstream errors", () => {
@@ -79,13 +96,34 @@ test("the UI loads and missing configuration is reported safely", async () => {
   const page = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   assert.match(page, /Fish Audio S2\.1 Pro Lab/);
 
-  const response = {
-    writeHead(status) { this.status = status; },
-    end(body) { this.body = body; },
-  };
-  await listVoices(response);
+  const response = await voices.fetch(new Request("http://localhost/api/voices"));
   assert.equal(response.status, 503);
-  assert.match(JSON.parse(response.body).error, /FISH_API_KEY/);
+  assert.match((await response.json()).error, /FISH_API_KEY/);
 
   if (original) process.env.FISH_API_KEY = original;
+});
+
+test("Vercel voice function rejects unsupported methods", async () => {
+  const response = await voices.fetch(new Request("http://localhost/api/voices", { method: "POST" }));
+  assert.equal(response.status, 405);
+  assert.equal(response.headers.get("allow"), "GET");
+});
+
+test("Vercel TTS function validates input before requiring a key", async () => {
+  const form = validForm();
+  form.set("speed", "3");
+  const response = await tts.fetch(new Request("http://localhost/api/tts", {
+    method: "POST",
+    body: form,
+  }));
+  assert.equal(response.status, 400);
+  assert.match((await response.json()).error, /speed must be between/);
+});
+
+test("Vercel config serves public files and allows streamed synthesis", async () => {
+  const config = JSON.parse(
+    await readFile(new URL("../vercel.json", import.meta.url), "utf8"),
+  );
+  assert.equal(config.outputDirectory, "public");
+  assert.equal(config.functions["api/*.js"].maxDuration, 60);
 });

@@ -1,6 +1,8 @@
 # Signal Tank
 
-Signal Tank is a local browser playground for evaluating Fish Audio's `s2.1-pro-free` text-to-speech model. Use it to compare voice character, multilingual delivery, synthesis settings, response time, and output formats before adding Fish Audio to a product.
+Signal Tank is a browser playground for evaluating Fish Audio's `s2.1-pro-free` text-to-speech model. Run it on your machine or deploy it to Vercel. Use it to compare voice character, multilingual delivery, synthesis settings, response time, and output formats before adding Fish Audio to a product.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmahmadmanzoor%2Ffish-audio-s21-playground&env=FISH_API_KEY&envDescription=Fish%20Audio%20API%20key&envLink=https%3A%2F%2Ffish.audio%2Fapp%2Fapi-keys)
 
 The browser UI supports:
 
@@ -9,7 +11,7 @@ The browser UI supports:
 - Speed, volume, temperature, diversity, and latency controls
 - MP3, WAV, and Opus playback and downloads
 - First-byte time, completion time, and output size for each generated take
-- Structured terminal logs for local and Fish Audio requests
+- Structured request logs for local development and Vercel
 
 ## Requirements
 
@@ -42,6 +44,26 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
 The Node server reads the API key. Browser code cannot access it. Git ignores `.env`.
 
+## Deploy to Vercel
+
+1. Open [vercel.com/new](https://vercel.com/new) and import this GitHub repository.
+2. Keep the project root at the repository root.
+3. Select **Other** as the framework preset. `vercel.json` sets `public` as the static output directory and configures the functions.
+4. Add `FISH_API_KEY` under **Environment Variables**. Enable it for Production and Preview.
+5. Deploy the project.
+
+Vercel serves the browser files from `public/` and deploys `api/voices.js` and `api/tts.js` as Node.js functions. Each push to `main` triggers a production deployment after you connect the repository.
+
+You can also deploy with the Vercel CLI:
+
+```bash
+npx vercel
+npx vercel env add FISH_API_KEY
+npx vercel --prod
+```
+
+Do not place the API key in `vercel.json` or any browser file.
+
 ## Evaluation flow
 
 1. Select **Narration** and keep the **Default** voice.
@@ -61,9 +83,9 @@ Generated takes remain in the current browser tab and disappear on refresh.
 | Default | Let Fish Audio select a voice |
 | Saved | Load up to 100 voices from your Fish Audio account |
 | Voice ID | Use a saved or public Fish Audio reference ID |
-| Instant clone | Upload reference audio and its exact transcript |
+| Instant clone | Upload reference audio up to 4 MB and its exact transcript |
 
-Fish Audio recommends a clean reference recording of at least 10 seconds. Signal Tank requires consent confirmation before sending clone audio.
+Fish Audio recommends a clean reference recording of at least 10 seconds. Signal Tank requires consent confirmation before sending clone audio. Vercel limits function request bodies to 4.5 MB, so the app caps audio files at 4 MB to leave room for multipart fields.
 
 ## Local API
 
@@ -76,7 +98,7 @@ The server fixes the upstream model header to `s2.1-pro-free`. It validates voic
 
 ## Request logs
 
-`npm start` prints one JSON object per event:
+Local development prints one JSON object per event in the terminal. Vercel writes the same events to the project Logs view.
 
 ```json
 {"event":"fish.tts.request","requestId":"a1b2c3d4","model":"s2.1-pro-free","textChars":155,"voiceMode":"default","format":"mp3","latency":"balanced"}
@@ -114,7 +136,7 @@ Inline reference audio requires MessagePack. Signal Tank delegates that encoding
 npm test
 ```
 
-The tests cover request mapping, instant-clone consent, conflicting voice inputs, safe log metadata, sanitized errors, and missing API-key behavior.
+The tests cover request mapping, instant-clone consent, Vercel's upload limit, safe log metadata, sanitized errors, and function behavior.
 
 ## Privacy notes
 
