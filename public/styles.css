@@ -2190,7 +2190,32 @@ summary:hover {
   width: min(170px, 54vw);
   aspect-ratio: 1;
   margin: 8px 0 16px;
+  padding: 0;
   place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.sonar-recorder-visual:disabled {
+  cursor: default;
+}
+
+.sonar-recorder-visual:focus-visible {
+  outline: 3px solid var(--aqua);
+  outline-offset: 6px;
+}
+
+.sonar-recorder-visual:not(:disabled):hover .sonar-recording-orb {
+  box-shadow:
+    0 0 calc(var(--glow-size) + 8px) var(--aqua-soft),
+    0 0 0 14px color-mix(in srgb, var(--aqua) 12%, transparent);
+}
+
+.sonar-recorder-visual:not(:disabled):active .sonar-recording-orb {
+  transform: scale(.94);
 }
 
 .sonar-recording-ring,

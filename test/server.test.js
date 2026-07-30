@@ -146,6 +146,7 @@ test("the UI contains curated profiles and missing configuration is reported saf
   delete process.env.SIGNAL_TANK_API_KEY;
   delete process.env.FISH_API_KEY;
   const page = await readFile(new URL("../public/lab.html", import.meta.url), "utf8");
+  const app = await readFile(new URL("../public/app.js", import.meta.url), "utf8");
   assert.match(page, /Voice Lab — Signal Tank/);
   assert.match(page, /Female · American/);
   assert.match(page, /Start recording/);
@@ -155,7 +156,10 @@ test("the UI contains curated profiles and missing configuration is reported saf
   assert.match(page, /data-step="4"/);
   assert.match(page, /id="review-script"/);
   assert.match(page, /sonar-recorder-visual/);
+  assert.match(page, /id="recording-orb"[^>]+aria-label="Start recording"/);
   assert.match(page, /id="microphone-level"/);
+  assert.match(app, /recordingOrb\.addEventListener\("click"/);
+  assert.match(app, /dataset\.state === "recording"\) stopRecording\(\)/);
   assert.doesNotMatch(page, /Saved|Voice ID|Refresh voices/);
 
   const response = await tts.fetch(new Request("http://localhost/api/tts", {

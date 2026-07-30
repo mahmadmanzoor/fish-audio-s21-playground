@@ -50,7 +50,7 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000), then choose **Open Lab**. Y
 
 The Node server reads the API key. Browser code cannot access it, and Git ignores `.env`.
 
-Browser recording uses the native `MediaRecorder` API and requires microphone permission. It works on localhost during development; deployed sites must use HTTPS. If a browser cannot record WebM, MP4, or Ogg audio, the lab keeps the normal audio-upload fallback available.
+Browser recording uses the native `MediaRecorder` API and requires microphone permission. Users can start or stop recording from the sonar orb or the labeled controls. It works on localhost during development; deployed sites must use HTTPS. If a browser cannot record WebM, MP4, or Ogg audio, the lab keeps the normal audio-upload fallback available.
 
 ## Deploy to Vercel
 

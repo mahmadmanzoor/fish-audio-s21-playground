@@ -17,6 +17,7 @@ const startRecordingButton = document.querySelector("#start-recording");
 const stopRecordingButton = document.querySelector("#stop-recording");
 const useRecordingButton = document.querySelector("#use-recording");
 const recordAgainButton = document.querySelector("#record-again");
+const recordingOrb = document.querySelector("#recording-orb");
 const recordingLiveLabel = document.querySelector("#recording-live-label");
 const workflowStatus = document.querySelector("#workflow-status");
 const workflowCount = document.querySelector("#workflow-count");
@@ -205,6 +206,10 @@ function setRecorderState(state) {
     error: "Recording needs attention",
   };
   recorderLabel.textContent = labels[state];
+  const orbAction = state === "recording" ? "Stop recording" : state === "error" ? "Try recording again" : "Start recording";
+  recordingOrb.setAttribute("aria-label", orbAction);
+  recordingOrb.setAttribute("aria-pressed", String(state === "recording"));
+  recordingOrb.title = orbAction;
   recordingLiveLabel.textContent = state === "recording"
     ? "● RECORDING"
     : state === "accepted"
@@ -220,6 +225,7 @@ function setRecorderState(state) {
   recorderReview.hidden = !["review", "accepted"].includes(state);
 
   const active = recordIsActive();
+  recordingOrb.disabled = !active || !canRecord || !["ready", "error", "recording"].includes(state);
   startRecordingButton.disabled = !active || !canRecord;
   stopRecordingButton.disabled = !active || state !== "recording";
   useRecordingButton.disabled = !active || state !== "review";
@@ -765,6 +771,10 @@ form.addEventListener("submit", async (event) => {
 
 startRecordingButton.addEventListener("click", startRecording);
 stopRecordingButton.addEventListener("click", stopRecording);
+recordingOrb.addEventListener("click", () => {
+  if (recorderShell.dataset.state === "recording") stopRecording();
+  else startRecording();
+});
 useRecordingButton.addEventListener("click", useRecording);
 recordAgainButton.addEventListener("click", startRecording);
 upload.addEventListener("change", () => {

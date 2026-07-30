@@ -174,11 +174,11 @@
                   <div id="recorder" class="recorder" data-state="ready">
                     <div class="recorder-stage">
                       <div class="recording-badge"><i aria-hidden="true"></i><span id="recording-live-label">MICROPHONE OFF</span></div>
-                      <div class="sonar-recorder-visual" aria-hidden="true">
-                        <span class="sonar-recording-ring ring-one"></span>
-                        <span class="sonar-recording-ring ring-two"></span>
-                        <span class="sonar-recording-orb"><i></i><i></i><i></i><i></i><i></i></span>
-                      </div>
+                      <button id="recording-orb" class="sonar-recorder-visual" type="button" aria-label="Start recording" aria-pressed="false" disabled>
+                        <span class="sonar-recording-ring ring-one" aria-hidden="true"></span>
+                        <span class="sonar-recording-ring ring-two" aria-hidden="true"></span>
+                        <span class="sonar-recording-orb" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+                      </button>
                       <strong id="recording-label">Ready to record</strong>
                       <time id="recording-timer" datetime="PT0S">00:00</time>
                       <div id="microphone-level" class="microphone-level"><span></span></div>
