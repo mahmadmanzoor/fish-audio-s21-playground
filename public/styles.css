@@ -1799,6 +1799,537 @@ summary:hover {
   font-weight: 700;
 }
 
+/* Guided lab workflow */
+
+.lab-hero {
+  min-height: 360px;
+  padding-top: 132px;
+  padding-bottom: 44px;
+}
+
+.lab-hero h1 {
+  font-size: clamp(3.35rem, 6.4vw, 6rem);
+}
+
+.workflow-progress {
+  position: sticky;
+  z-index: 8;
+  top: 96px;
+  margin-bottom: 16px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 19px;
+  background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+.workflow-progress > p:first-child {
+  display: none;
+}
+
+.workflow-progress ol {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workflow-progress button {
+  display: flex;
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 13px;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--muted);
+  background: transparent;
+  font-size: .76rem;
+  font-weight: 650;
+  text-align: left;
+  transition: color 180ms ease, background-color 180ms ease, transform 220ms var(--ease);
+}
+
+.workflow-progress button span {
+  color: var(--aqua);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .64rem;
+}
+
+.workflow-progress button:not(:disabled):hover {
+  color: var(--ink);
+  background: var(--aqua-soft);
+  transform: translateY(-1px);
+}
+
+.workflow-progress .is-current button {
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 3px 14px rgba(10, 30, 25, .08);
+}
+
+.workflow-progress .is-complete button span {
+  color: var(--signal-ink);
+  background: var(--signal);
+}
+
+.workflow-progress button:disabled {
+  cursor: not-allowed;
+  opacity: .46;
+}
+
+.workflow-status {
+  min-height: 1.3em;
+  margin: 8px 8px 0;
+  color: var(--muted);
+  font-size: .68rem;
+}
+
+.workflow-status.error {
+  color: var(--danger);
+  font-weight: 650;
+}
+
+.lab-flow {
+  display: grid;
+  gap: 12px;
+}
+
+.workflow-step {
+  padding: 0;
+  overflow: clip;
+  scroll-margin-top: 184px;
+}
+
+.workflow-step:hover {
+  transform: none;
+}
+
+.workflow-step[data-state="current"] {
+  border-color: var(--aqua);
+  box-shadow: var(--shadow);
+}
+
+.workflow-step[data-state="locked"] {
+  background: var(--bg-soft);
+  box-shadow: none;
+}
+
+.step-toggle {
+  display: grid;
+  width: 100%;
+  min-height: 94px;
+  padding: 22px clamp(22px, 3vw, 38px);
+  grid-template-columns: 44px minmax(0, 1fr) minmax(160px, .8fr) auto;
+  gap: 16px;
+  align-items: center;
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+}
+
+.step-toggle:disabled {
+  cursor: not-allowed;
+}
+
+.step-number {
+  color: var(--aqua);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.step-heading {
+  display: grid;
+  gap: 5px;
+}
+
+.step-heading strong {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -.035em;
+}
+
+.step-heading strong:focus {
+  outline: 0;
+}
+
+.step-heading small,
+.step-summary {
+  color: var(--muted);
+  font-size: .73rem;
+  line-height: 1.45;
+}
+
+.step-summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.step-action {
+  min-width: 54px;
+  color: var(--aqua);
+  font-size: .68rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.workflow-step[data-state="locked"] .step-number,
+.workflow-step[data-state="locked"] .step-action {
+  color: var(--muted);
+}
+
+.step-body {
+  padding: 4px clamp(22px, 3vw, 38px) clamp(28px, 4vw, 46px) 98px;
+  animation: enter 320ms var(--ease) both;
+}
+
+.step-body-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.step-intro,
+.step-body-head p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.step-body-head output {
+  align-self: start;
+  color: var(--muted);
+  font-size: .72rem;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.step-continue {
+  display: inline-flex;
+  min-height: 48px;
+  padding: 12px 17px;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid var(--aqua);
+  border-radius: 13px;
+  color: var(--surface-strong);
+  background: var(--aqua);
+  font-size: .76rem;
+  font-weight: 720;
+  transition: box-shadow 220ms ease, transform 220ms var(--ease), opacity 180ms ease;
+}
+
+.step-continue:not(:disabled):hover {
+  box-shadow: 0 12px 28px var(--aqua-soft);
+  transform: translateY(-2px);
+}
+
+.step-continue:disabled {
+  cursor: not-allowed;
+  opacity: .42;
+}
+
+.control-note {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: .68rem;
+  line-height: 1.45;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.review-grid article {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--bg-soft);
+}
+
+.review-grid article > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.review-grid article span {
+  color: var(--aqua);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.review-grid article button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  font-size: .7rem;
+  font-weight: 650;
+}
+
+.review-grid article button:hover {
+  color: var(--aqua);
+}
+
+.review-grid article p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: .82rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.review-step .launch-panel {
+  display: grid;
+  min-height: 0;
+  padding: clamp(24px, 3vw, 36px);
+  grid-template-columns: minmax(0, 1fr) minmax(250px, .72fr);
+  gap: 20px 34px;
+  align-items: center;
+}
+
+.review-step .launch-panel .status {
+  grid-column: 1 / -1;
+}
+
+/* Reactive recorder */
+
+.recorder {
+  --mic-level: 0;
+  --meter-width: 2%;
+  --orb-scale: 1;
+  --ring-one-scale: 1;
+  --ring-two-scale: 1;
+  --glow-size: 22px;
+  --bar-scale: .55;
+}
+
+.recorder-stage {
+  position: relative;
+  display: grid;
+  min-height: 310px;
+  margin-bottom: 18px;
+  padding: 28px;
+  overflow: hidden;
+  place-items: center;
+  align-content: center;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 50%, var(--aqua-soft), transparent 44%),
+    var(--surface);
+  isolation: isolate;
+}
+
+.recording-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: inline-flex;
+  min-height: 32px;
+  padding: 7px 10px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  background: var(--surface-strong);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .6rem;
+  font-weight: 750;
+  letter-spacing: .07em;
+}
+
+.recording-badge i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.recorder[data-state="recording"] .recording-badge {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.recorder[data-state="accepted"] .recording-badge {
+  border-color: var(--signal);
+  color: var(--signal-ink);
+  background: var(--signal);
+}
+
+.sonar-recorder-visual {
+  position: relative;
+  display: grid;
+  width: min(170px, 54vw);
+  aspect-ratio: 1;
+  margin: 8px 0 16px;
+  place-items: center;
+}
+
+.sonar-recording-ring,
+.sonar-recording-orb {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 75ms linear, opacity 100ms linear, box-shadow 100ms linear;
+}
+
+.sonar-recording-ring {
+  border: 1px solid color-mix(in srgb, var(--aqua) 46%, transparent);
+  opacity: calc(.26 + var(--mic-level));
+}
+
+.sonar-recording-ring.ring-one {
+  inset: 13%;
+  transform: scale(var(--ring-one-scale));
+}
+
+.sonar-recording-ring.ring-two {
+  inset: 0;
+  border-color: color-mix(in srgb, var(--signal) 48%, transparent);
+  transform: scale(var(--ring-two-scale));
+}
+
+.sonar-recording-orb {
+  display: flex;
+  width: 82px;
+  height: 82px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background:
+    radial-gradient(circle at 35% 30%, var(--signal), transparent 38%),
+    var(--aqua);
+  box-shadow:
+    0 0 var(--glow-size) var(--aqua-soft),
+    0 0 0 10px color-mix(in srgb, var(--aqua) 10%, transparent);
+  transform: scale(var(--orb-scale));
+}
+
+.sonar-recording-orb i {
+  width: 4px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--surface-strong);
+  transform: scaleY(var(--bar-scale));
+  transition: transform 75ms linear;
+}
+
+.sonar-recording-orb i:nth-child(2),
+.sonar-recording-orb i:nth-child(4) {
+  height: 30px;
+}
+
+.sonar-recording-orb i:nth-child(3) {
+  height: 42px;
+}
+
+.recorder-stage > strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+#recording-timer {
+  margin-top: 6px;
+  color: var(--ink);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.05em;
+}
+
+.microphone-level {
+  width: min(220px, 72%);
+  height: 5px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+
+.microphone-level span {
+  display: block;
+  width: var(--meter-width);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--aqua), var(--signal));
+  transition: width 75ms linear;
+}
+
+.recorder:not([data-state="recording"]) .sonar-recording-ring {
+  opacity: .22;
+}
+
+.recorder[data-state="requesting"] .sonar-recording-orb,
+.recorder[data-state="processing"] .sonar-recording-orb {
+  animation: recorder-breathe 1.7s ease-in-out infinite;
+}
+
+.recorder[data-state="recording"].analysis-fallback .sonar-recording-ring {
+  animation: recorder-ring 1.6s ease-out infinite;
+}
+
+.recorder[data-state="review"] .recorder-stage,
+.recorder[data-state="accepted"] .recorder-stage {
+  min-height: 180px;
+}
+
+.recorder[data-state="review"] .sonar-recorder-visual,
+.recorder[data-state="accepted"] .sonar-recorder-visual,
+.recorder[data-state="review"] .microphone-level,
+.recorder[data-state="accepted"] .microphone-level {
+  display: none;
+}
+
+.recorder[data-state="recording"] .recorder-actions {
+  justify-content: center;
+}
+
+.recorder[data-state="recording"] .record-button.stop {
+  width: min(360px, 100%);
+  min-height: 54px;
+  border-color: var(--danger);
+  color: white;
+  background: var(--danger);
+  font-size: .82rem;
+}
+
+@keyframes recorder-breathe {
+  50% { transform: scale(1.06); }
+}
+
+@keyframes recorder-ring {
+  from { opacity: .55; transform: scale(.7); }
+  to { opacity: 0; transform: scale(1.35); }
+}
+
 /* Guide */
 
 .guide-hero {
@@ -2472,24 +3003,21 @@ pre code {
 
   .lab-hero {
     grid-template-columns: 1fr;
-    gap: 34px;
+    gap: 24px;
     min-height: auto;
-    padding-top: 180px;
+    padding-top: 142px;
   }
 
   .lab-hero > p {
     margin-left: auto;
   }
 
-  .lab-grid {
+  .review-grid {
     grid-template-columns: 1fr;
   }
 
-  .composer,
-  .controls-panel,
-  .launch-panel {
-    grid-column: 1;
-    grid-row: auto;
+  .review-step .launch-panel {
+    grid-template-columns: 1fr;
   }
 
   .result-list {
@@ -2628,8 +3156,8 @@ pre code {
   }
 
   .lab-hero {
-    padding-top: 150px;
-    padding-bottom: 64px;
+    padding-top: 126px;
+    padding-bottom: 38px;
   }
 
   .lab-hero > p {
@@ -2639,6 +3167,78 @@ pre code {
   .panel,
   .launch-panel {
     padding: 24px 19px;
+  }
+
+  .workflow-progress {
+    top: 84px;
+    padding: 8px;
+  }
+
+  .workflow-progress > p:first-child {
+    display: block;
+    margin: 3px 6px 8px;
+    color: var(--ink);
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .workflow-progress ol {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+
+  .workflow-progress button {
+    min-height: 38px;
+    padding: 6px;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .workflow-progress button span {
+    font-size: .66rem;
+  }
+
+  .workflow-status {
+    display: none;
+  }
+
+  .workflow-step {
+    padding: 0;
+    scroll-margin-top: 154px;
+  }
+
+  .step-toggle {
+    min-height: 82px;
+    padding: 18px;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .step-heading small,
+  .step-summary {
+    display: none;
+  }
+
+  .step-action {
+    min-width: 48px;
+  }
+
+  .step-body {
+    padding: 2px 18px 28px;
+  }
+
+  .step-actions {
+    justify-content: stretch;
+  }
+
+  .step-continue {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .recorder-stage {
+    min-height: 285px;
+    padding-inline: 12px;
   }
 
   .voice-tabs {
@@ -2831,5 +3431,17 @@ pre code {
   .js [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+
+  .sonar-recording-ring,
+  .sonar-recording-orb,
+  .sonar-recording-orb i {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .microphone-level span {
+    transition: none;
   }
 }

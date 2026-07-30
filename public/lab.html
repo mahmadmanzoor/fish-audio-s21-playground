@@ -61,193 +61,259 @@
       <section class="lab-hero">
         <div>
           <p class="model-label"><span></span> Live evaluation workspace</p>
-          <h1>Tune a voice.<br><em>Measure the result.</em></h1>
+          <h1>Build a voice,<br><em>step by step.</em></h1>
         </div>
-        <p>Change the script, voice, pacing, and output. Every generated take stays in this browser session.</p>
+        <p>Write, choose, tune, and review. Your work and generated takes stay in this browser session.</p>
       </section>
 
-      <form id="lab-form" class="lab-grid">
-        <section class="panel composer" aria-labelledby="script-title" data-reveal>
-          <div class="panel-head">
-            <div><span class="panel-number">01</span><h2 id="script-title">Script</h2></div>
-            <output id="character-count" for="text">0 chars</output>
-          </div>
+      <nav class="workflow-progress" aria-label="Lab progress">
+        <p id="workflow-count">Step 1 of 4</p>
+        <ol>
+          <li class="is-current"><button type="button" data-step-jump="1" aria-current="step"><span>01</span> Script</button></li>
+          <li><button type="button" data-step-jump="2" disabled><span>02</span> Voice</button></li>
+          <li><button type="button" data-step-jump="3" disabled><span>03</span> Delivery</button></li>
+          <li><button type="button" data-step-jump="4" disabled><span>04</span> Review</button></li>
+        </ol>
+        <p id="workflow-status" class="workflow-status" role="status" aria-live="polite">Start by choosing a sample or writing your own script.</p>
+      </nav>
 
-          <div class="preset-row" aria-label="Script presets">
-            <button type="button" class="chip preset active" data-preset="narration" aria-pressed="true">Narration</button>
-            <button type="button" class="chip preset" data-preset="agent" aria-pressed="false">Agent</button>
-            <button type="button" class="chip preset" data-preset="urdu" aria-pressed="false">Urdu</button>
-            <button type="button" class="chip preset" data-preset="spanish" aria-pressed="false">Spanish</button>
-            <button type="button" class="chip preset" data-preset="arabic" aria-pressed="false">Arabic</button>
-          </div>
-
-          <label class="sr-only" for="text">Text to synthesize</label>
-          <textarea id="text" name="text" rows="10" required spellcheck="true" dir="auto">[warm] There is a moment, just before a new idea takes shape, when possibility feels almost electric. [chuckle] That is usually the moment worth following.</textarea>
-
-          <div class="tag-row">
-            <span>Insert direction</span>
-            <button type="button" class="tag" data-tag="[warm]">warm</button>
-            <button type="button" class="tag" data-tag="[happy]">happy</button>
-            <button type="button" class="tag" data-tag="[whisper]">whisper</button>
-            <button type="button" class="tag" data-tag="[chuckle]">chuckle</button>
-            <button type="button" class="tag" data-tag="[emphasis]">emphasis</button>
-          </div>
-        </section>
-
-        <section class="panel voice-panel" aria-labelledby="voice-title" data-reveal>
-          <div class="panel-head">
-            <div><span class="panel-number">02</span><h2 id="voice-title">Voice source</h2></div>
-            <span class="muted mono">Select or clone</span>
-          </div>
-
-          <fieldset class="voice-tabs">
-            <legend class="sr-only">Choose one voice source</legend>
-            <label><input type="radio" name="voiceMode" value="preset" checked><span>Choose a voice</span></label>
-            <label><input type="radio" name="voiceMode" value="clone"><span>Clone a voice</span></label>
-          </fieldset>
-
-          <div class="voice-content">
-            <div class="voice-mode" data-mode="preset">
-              <fieldset class="voice-profiles">
-                <legend>Voice profile</legend>
-                <label>
-                  <input type="radio" name="voicePreset" value="balanced" checked>
-                  <span><strong>Balanced</strong><small>Natural · flexible house voice</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="voicePreset" value="female-american">
-                  <span><strong>Female · American</strong><small>Bright · friendly · conversational</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="voicePreset" value="male-american">
-                  <span><strong>Male · American</strong><small>Clear · energetic · promotional</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="voicePreset" value="female-british">
-                  <span><strong>Female · British</strong><small>Crisp · friendly · professional</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="voicePreset" value="male-british">
-                  <span><strong>Male · British</strong><small>Deep · measured · authoritative</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="voicePreset" value="male-indian">
-                  <span><strong>Male · Indian English</strong><small>Calm · clear · professional</small></span>
-                </label>
-              </fieldset>
-            </div>
-            <div class="voice-mode" data-mode="clone" hidden>
-              <fieldset class="voice-tabs clone-source-tabs">
-                <legend class="sr-only">Choose how to provide reference audio</legend>
-                <label><input type="radio" name="cloneSource" value="record" checked disabled><span>Record now</span></label>
-                <label><input type="radio" name="cloneSource" value="upload" disabled><span>Upload audio</span></label>
-              </fieldset>
-
-              <div class="clone-source" data-clone-source="record">
-                <div id="recorder" class="recorder" data-state="ready">
-                  <div class="recorder-head">
-                    <span class="recording-state"><i aria-hidden="true"></i><span id="recording-label">Ready to record</span></span>
-                    <time id="recording-timer" datetime="PT0S">00:00</time>
-                  </div>
-                  <div class="read-prompt">
-                    <span>Read this naturally</span>
-                    <blockquote>Hello, I’m recording a clear sample of my natural voice. This morning, I walked through a quiet garden, watched bright birds cross the blue sky, and wondered how thoughtful technology could make everyday conversations warmer, clearer, and more human.</blockquote>
-                  </div>
-                  <p class="field-note">Use one speaker in a quiet room. Aim for 15–20 seconds; recordings must be at least 10 seconds and stop automatically at 30.</p>
-                  <div class="recorder-actions">
-                    <button id="start-recording" class="record-button" type="button" disabled>
-                      <span aria-hidden="true"></span> Start recording
-                    </button>
-                    <button id="stop-recording" class="record-button stop" type="button" hidden disabled>Stop recording</button>
-                    <button id="use-recording" class="record-button" type="button" hidden disabled>Use recording</button>
-                    <button id="record-again" class="text-button" type="button" hidden disabled>Record again</button>
-                  </div>
-                  <div id="recording-review" class="recording-review" hidden>
-                    <audio id="recording-audio" controls preload="metadata"></audio>
-                    <p id="recording-meta" class="field-note"></p>
-                  </div>
-                  <p id="recorder-feedback" class="recorder-feedback" role="status" aria-live="polite">Microphone access is requested only after you press Start recording.</p>
-                </div>
-              </div>
-
-              <div class="clone-source" data-clone-source="upload" hidden>
-                <label for="reference-audio">Reference recording</label>
-                <input id="reference-audio" name="referenceAudio" type="file" accept="audio/*" disabled>
-                <p class="field-note">Use clean audio with one speaker. Maximum 4 MB.</p>
-              </div>
-
-              <label for="reference-text">Exact words spoken</label>
-              <textarea id="reference-text" name="referenceText" rows="4" dir="auto" placeholder="Transcribe the recording exactly…" readonly disabled></textarea>
-              <label class="consent">
-                <input id="consent" name="consent" type="checkbox" value="yes" disabled>
-                <span>I have the speaker’s permission to clone this voice.</span>
-              </label>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel controls-panel" aria-labelledby="controls-title" data-reveal>
-          <div class="panel-head">
-            <div><span class="panel-number">03</span><h2 id="controls-title">Delivery</h2></div>
-            <span class="muted mono">Calibrate</span>
-          </div>
-          <div class="control-grid">
-            <label class="range-control">
-              <span>Speed <output id="speed-value" for="speed">1.00×</output></span>
-              <input id="speed" name="speed" type="range" min="0.5" max="2" step="0.05" value="1">
-            </label>
-            <label class="range-control">
-              <span>Volume <output id="volume-value" for="volume">0 dB</output></span>
-              <input id="volume" name="volume" type="range" min="-20" max="20" step="1" value="0">
-            </label>
-            <label>
-              <span>Latency mode</span>
-              <select id="latency" name="latency">
-                <option value="normal">Normal · quality</option>
-                <option value="balanced">Balanced</option>
-                <option value="low">Low · speed</option>
-              </select>
-            </label>
-            <label>
-              <span>Audio format</span>
-              <select id="format" name="format">
-                <option value="mp3">MP3</option>
-                <option value="wav">WAV</option>
-                <option value="opus">Opus</option>
-              </select>
-            </label>
-          </div>
-          <details>
-            <summary>Model variation</summary>
-            <div class="control-grid variation">
-              <label class="range-control">
-                <span>Temperature <output id="temperature-value" for="temperature">0.70</output></span>
-                <input id="temperature" name="temperature" type="range" min="0" max="1" step="0.05" value="0.7">
-              </label>
-              <label class="range-control">
-                <span>Diversity <output id="topP-value" for="topP">0.70</output></span>
-                <input id="topP" name="topP" type="range" min="0" max="1" step="0.05" value="0.7">
-              </label>
-            </div>
-          </details>
-        </section>
-
-        <aside class="launch-panel" aria-label="Generate speech" data-reveal>
-          <div>
-            <p class="model-label"><span></span> Ready channel</p>
-            <p class="launch-copy">Your key stays behind the server. Generated audio is kept only in this browser session.</p>
-          </div>
-          <button id="generate" class="generate-button" type="submit">
-            <span>Generate signal</span>
-            <span class="button-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <form id="lab-form" class="lab-flow">
+        <section class="workflow-step panel" data-step="1" data-state="current" aria-labelledby="script-title">
+          <button class="step-toggle" type="button" data-step-toggle="1" aria-expanded="true" aria-controls="step-1-body">
+            <span class="step-number">01</span>
+            <span class="step-heading"><strong id="script-title">Script</strong><small>Choose a sample or write what you want to hear.</small></span>
+            <span id="step-1-summary" class="step-summary" hidden></span>
+            <span class="step-action">Current</span>
           </button>
-          <p id="status" class="status" role="status" aria-live="polite">Waiting for a script.</p>
-        </aside>
+          <div id="step-1-body" class="step-body">
+            <div class="step-body-head">
+              <p>Choose a sample or write what you want to hear.</p>
+              <output id="character-count" for="text">0 chars</output>
+            </div>
+
+            <div class="preset-row" aria-label="Script presets">
+              <button type="button" class="chip preset active" data-preset="narration" aria-pressed="true">Narration</button>
+              <button type="button" class="chip preset" data-preset="agent" aria-pressed="false">Agent</button>
+              <button type="button" class="chip preset" data-preset="urdu" aria-pressed="false">Urdu</button>
+              <button type="button" class="chip preset" data-preset="spanish" aria-pressed="false">Spanish</button>
+              <button type="button" class="chip preset" data-preset="arabic" aria-pressed="false">Arabic</button>
+            </div>
+
+            <label class="sr-only" for="text">Text to synthesize</label>
+            <textarea id="text" name="text" rows="10" required spellcheck="true" dir="auto">[warm] There is a moment, just before a new idea takes shape, when possibility feels almost electric. [chuckle] That is usually the moment worth following.</textarea>
+
+            <div class="tag-row">
+              <span>Insert direction</span>
+              <button type="button" class="tag" data-tag="[warm]">warm</button>
+              <button type="button" class="tag" data-tag="[happy]">happy</button>
+              <button type="button" class="tag" data-tag="[whisper]">whisper</button>
+              <button type="button" class="tag" data-tag="[chuckle]">chuckle</button>
+              <button type="button" class="tag" data-tag="[emphasis]">emphasis</button>
+            </div>
+
+            <div class="step-actions">
+              <button class="step-continue" type="button" data-next-step="2">Continue to voice <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="workflow-step panel" data-step="2" data-state="locked" aria-labelledby="voice-title">
+          <button class="step-toggle" type="button" data-step-toggle="2" aria-expanded="false" aria-controls="step-2-body" disabled>
+            <span class="step-number">02</span>
+            <span class="step-heading"><strong id="voice-title">Voice</strong><small>Choose a ready-made profile or clone an approved voice.</small></span>
+            <span id="step-2-summary" class="step-summary" hidden></span>
+            <span class="step-action">Locked</span>
+          </button>
+          <div id="step-2-body" class="step-body" hidden>
+            <p class="step-intro">Choose a ready-made profile or clone an approved voice.</p>
+
+            <fieldset class="voice-tabs">
+              <legend class="sr-only">Choose one voice source</legend>
+              <label><input type="radio" name="voiceMode" value="preset" checked><span>Choose a voice</span></label>
+              <label><input type="radio" name="voiceMode" value="clone"><span>Clone a voice</span></label>
+            </fieldset>
+
+            <div class="voice-content">
+              <div class="voice-mode" data-mode="preset">
+                <fieldset class="voice-profiles">
+                  <legend>Voice profile</legend>
+                  <label>
+                    <input type="radio" name="voicePreset" value="balanced" checked>
+                    <span><strong>Balanced</strong><small>Natural · flexible house voice</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="voicePreset" value="female-american">
+                    <span><strong>Female · American</strong><small>Bright · friendly · conversational</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="voicePreset" value="male-american">
+                    <span><strong>Male · American</strong><small>Clear · energetic · promotional</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="voicePreset" value="female-british">
+                    <span><strong>Female · British</strong><small>Crisp · friendly · professional</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="voicePreset" value="male-british">
+                    <span><strong>Male · British</strong><small>Deep · measured · authoritative</small></span>
+                  </label>
+                  <label>
+                    <input type="radio" name="voicePreset" value="male-indian">
+                    <span><strong>Male · Indian English</strong><small>Calm · clear · professional</small></span>
+                  </label>
+                </fieldset>
+              </div>
+              <div class="voice-mode" data-mode="clone" hidden>
+                <fieldset class="voice-tabs clone-source-tabs">
+                  <legend class="sr-only">Choose how to provide reference audio</legend>
+                  <label><input type="radio" name="cloneSource" value="record" checked disabled><span>Record now</span></label>
+                  <label><input type="radio" name="cloneSource" value="upload" disabled><span>Upload audio</span></label>
+                </fieldset>
+
+                <div class="clone-source" data-clone-source="record">
+                  <div id="recorder" class="recorder" data-state="ready">
+                    <div class="recorder-stage">
+                      <div class="recording-badge"><i aria-hidden="true"></i><span id="recording-live-label">MICROPHONE OFF</span></div>
+                      <div class="sonar-recorder-visual" aria-hidden="true">
+                        <span class="sonar-recording-ring ring-one"></span>
+                        <span class="sonar-recording-ring ring-two"></span>
+                        <span class="sonar-recording-orb"><i></i><i></i><i></i><i></i><i></i></span>
+                      </div>
+                      <strong id="recording-label">Ready to record</strong>
+                      <time id="recording-timer" datetime="PT0S">00:00</time>
+                      <div id="microphone-level" class="microphone-level"><span></span></div>
+                    </div>
+                    <div class="read-prompt">
+                      <span>Read this naturally</span>
+                      <blockquote>Hello, I’m recording a clear sample of my natural voice. This morning, I walked through a quiet garden, watched bright birds cross the blue sky, and wondered how thoughtful technology could make everyday conversations warmer, clearer, and more human.</blockquote>
+                    </div>
+                    <p class="field-note">Use one speaker in a quiet room. Aim for 15–20 seconds; recordings must be at least 10 seconds and stop automatically at 30.</p>
+                    <div class="recorder-actions">
+                      <button id="start-recording" class="record-button" type="button" disabled>
+                        <span aria-hidden="true"></span> Start recording
+                      </button>
+                      <button id="stop-recording" class="record-button stop" type="button" hidden disabled>Stop recording</button>
+                      <button id="use-recording" class="record-button" type="button" hidden disabled>Use recording</button>
+                      <button id="record-again" class="text-button" type="button" hidden disabled>Record again</button>
+                    </div>
+                    <div id="recording-review" class="recording-review" hidden>
+                      <audio id="recording-audio" controls preload="metadata"></audio>
+                      <p id="recording-meta" class="field-note"></p>
+                    </div>
+                    <p id="recorder-feedback" class="recorder-feedback" role="status" aria-live="polite">Microphone access is requested only after you press Start recording.</p>
+                  </div>
+                </div>
+
+                <div class="clone-source" data-clone-source="upload" hidden>
+                  <label for="reference-audio">Reference recording</label>
+                  <input id="reference-audio" name="referenceAudio" type="file" accept="audio/*" disabled>
+                  <p class="field-note">Use clean audio with one speaker. Maximum 4 MB.</p>
+                </div>
+
+                <label for="reference-text">Exact words spoken</label>
+                <textarea id="reference-text" name="referenceText" rows="4" dir="auto" placeholder="Transcribe the recording exactly…" readonly disabled></textarea>
+                <label class="consent">
+                  <input id="consent" name="consent" type="checkbox" value="yes" disabled>
+                  <span>I have the speaker’s permission to clone this voice.</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button class="step-continue" type="button" data-next-step="3">Continue to delivery <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="workflow-step panel" data-step="3" data-state="locked" aria-labelledby="controls-title">
+          <button class="step-toggle" type="button" data-step-toggle="3" aria-expanded="false" aria-controls="step-3-body" disabled>
+            <span class="step-number">03</span>
+            <span class="step-heading"><strong id="controls-title">Delivery</strong><small>Adjust how the voice speaks and how quickly it responds.</small></span>
+            <span id="step-3-summary" class="step-summary" hidden></span>
+            <span class="step-action">Locked</span>
+          </button>
+          <div id="step-3-body" class="step-body" hidden>
+            <p class="step-intro">Adjust how the voice speaks and how quickly it responds.</p>
+            <div class="control-grid">
+              <label class="range-control">
+                <span>Speed <output id="speed-value" for="speed">1.00×</output></span>
+                <input id="speed" name="speed" type="range" min="0.5" max="2" step="0.05" value="1">
+              </label>
+              <label class="range-control">
+                <span>Volume <output id="volume-value" for="volume">0 dB</output></span>
+                <input id="volume" name="volume" type="range" min="-20" max="20" step="1" value="0">
+              </label>
+              <label>
+                <span>Latency mode</span>
+                <select id="latency" name="latency">
+                  <option value="normal">Normal · quality</option>
+                  <option value="balanced">Balanced</option>
+                  <option value="low">Low · speed</option>
+                </select>
+                <small class="control-note">Normal favors quality; Low favors a faster first response.</small>
+              </label>
+              <label>
+                <span>Audio format</span>
+                <select id="format" name="format">
+                  <option value="mp3">MP3</option>
+                  <option value="wav">WAV</option>
+                  <option value="opus">Opus</option>
+                </select>
+                <small class="control-note">MP3 is the easiest format to preview and share.</small>
+              </label>
+            </div>
+            <details>
+              <summary>Model variation</summary>
+              <p class="control-note">Higher values explore more delivery variation; keep both near default for consistent comparisons.</p>
+              <div class="control-grid variation">
+                <label class="range-control">
+                  <span>Temperature <output id="temperature-value" for="temperature">0.70</output></span>
+                  <input id="temperature" name="temperature" type="range" min="0" max="1" step="0.05" value="0.7">
+                </label>
+                <label class="range-control">
+                  <span>Diversity <output id="topP-value" for="topP">0.70</output></span>
+                  <input id="topP" name="topP" type="range" min="0" max="1" step="0.05" value="0.7">
+                </label>
+              </div>
+            </details>
+            <div class="step-actions">
+              <button class="step-continue" type="button" data-next-step="4">Review settings <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="workflow-step panel review-step" data-step="4" data-state="locked" aria-labelledby="review-title">
+          <button class="step-toggle" type="button" data-step-toggle="4" aria-expanded="false" aria-controls="step-4-body" disabled>
+            <span class="step-number">04</span>
+            <span class="step-heading"><strong id="review-title">Review</strong><small>Check the signal before you generate it.</small></span>
+            <span id="step-4-summary" class="step-summary" hidden>Ready to generate</span>
+            <span class="step-action">Locked</span>
+          </button>
+          <div id="step-4-body" class="step-body" hidden>
+            <p class="step-intro">Everything is ready. Make a final check, then generate your signal.</p>
+            <div class="review-grid">
+              <article><div><span>Script</span><button type="button" data-edit-step="1">Edit</button></div><p id="review-script"></p></article>
+              <article><div><span>Voice</span><button type="button" data-edit-step="2">Edit</button></div><p id="review-voice"></p></article>
+              <article><div><span>Delivery</span><button type="button" data-edit-step="3">Edit</button></div><p id="review-delivery"></p></article>
+            </div>
+            <div class="launch-panel" aria-label="Generate speech">
+              <div>
+                <p class="model-label"><span></span> Ready channel</p>
+                <p class="launch-copy">Your key stays behind the server. Generated audio is kept only in this browser session.</p>
+              </div>
+              <button id="generate" class="generate-button" type="submit">
+                <span>Generate signal</span>
+                <span class="button-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              </button>
+              <p id="status" class="status" role="status" aria-live="polite">Ready to generate.</p>
+            </div>
+          </div>
+        </section>
       </form>
 
       <section class="results" aria-labelledby="results-title" data-reveal>
         <div class="results-head">
-          <div><span class="panel-number">04</span><h2 id="results-title">Session takes</h2></div>
+          <div><span class="panel-number">OUT</span><h2 id="results-title">Session takes</h2></div>
           <p class="muted">Newest first · cleared on refresh</p>
         </div>
         <div id="result-list" class="result-list">

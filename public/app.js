@@ -17,6 +17,9 @@ const startRecordingButton = document.querySelector("#start-recording");
 const stopRecordingButton = document.querySelector("#stop-recording");
 const useRecordingButton = document.querySelector("#use-recording");
 const recordAgainButton = document.querySelector("#record-again");
+const recordingLiveLabel = document.querySelector("#recording-live-label");
+const workflowStatus = document.querySelector("#workflow-status");
+const workflowCount = document.querySelector("#workflow-count");
 
 const CLONE_PROMPT = "Hello, I’m recording a clear sample of my natural voice. This morning, I walked through a quiet garden, watched bright birds cross the blue sky, and wondered how thoughtful technology could make everyday conversations warmer, clearer, and more human.";
 const MIN_RECORDING_SECONDS = 10;
@@ -37,6 +40,17 @@ let recordingAccepted = false;
 let recorderSession = 0;
 let discardAfterStop = false;
 let isGenerating = false;
+let currentStep = 1;
+let maxUnlockedStep = 1;
+let activePreset = "Narration";
+let audioContext;
+let analyser;
+let analyserSource;
+let analyserData;
+let analyserFrame;
+let smoothedLevel = 0;
+let silenceStarted;
+let silenceActive = false;
 
 const presets = {
   narration: "[warm] There is a moment, just before a new idea takes shape, when possibility feels almost electric. [chuckle] That is usually the moment worth following.",
@@ -56,6 +70,98 @@ const voiceLabels = {
 };
 
 const canRecord = Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+
+function shortText(value, length = 96) {
+  const clean = value.trim().replace(/\s+/g, " ");
+  return clean.length > length ? `${clean.slice(0, length).trim()}…` : clean;
+}
+
+function voiceSummary() {
+  return cloneIsActive()
+    ? "Approved voice clone"
+    : voiceLabels[selectedValue("voicePreset")] || "Balanced";
+}
+
+function updateWorkflowSummary() {
+  const { format, speed, volume, latency, temperature, topP } = form.elements;
+  const formatLabel = format.value.toUpperCase();
+  const delivery = `${Number(speed.value).toFixed(2)}× speed · ${latency.value} latency · ${formatLabel} · ${Number(temperature.value).toFixed(2)} / ${Number(topP.value).toFixed(2)} variation`;
+  document.querySelector("#step-1-summary").textContent = `${activePreset} · ${shortText(text.value, 70)}`;
+  document.querySelector("#step-2-summary").textContent = voiceSummary();
+  document.querySelector("#step-3-summary").textContent = delivery;
+  document.querySelector("#review-script").textContent = shortText(text.value, 180);
+  document.querySelector("#review-voice").textContent = voiceSummary();
+  document.querySelector("#review-delivery").textContent = `${Number(speed.value).toFixed(2)}× speed · ${volume.value} dB · ${latency.value} latency · ${formatLabel} · temperature ${Number(temperature.value).toFixed(2)} · diversity ${Number(topP.value).toFixed(2)}`;
+}
+
+function cloneReady() {
+  if (!cloneIsActive()) return true;
+  const hasAudio = recordIsActive() ? Boolean(recordedFile && recordingAccepted) : Boolean(upload.files[0]);
+  return hasAudio && Boolean(transcript.value.trim()) && consent.checked;
+}
+
+function updateStepActions() {
+  form.querySelector('[data-next-step="2"]').disabled = !text.value.trim();
+  form.querySelector('[data-next-step="3"]').disabled = !cloneReady();
+}
+
+function setWorkflowMessage(message, error = false) {
+  workflowStatus.textContent = message;
+  workflowStatus.classList.toggle("error", error);
+}
+
+function showStep(step, focus = true) {
+  if (step > maxUnlockedStep) return;
+  currentStep = step;
+  document.querySelectorAll(".workflow-step").forEach((section) => {
+    const number = Number(section.dataset.step);
+    const current = number === step;
+    const complete = number < maxUnlockedStep || (maxUnlockedStep === 4 && number < 4);
+    const locked = number > maxUnlockedStep;
+    section.dataset.state = current ? "current" : locked ? "locked" : complete ? "complete" : "available";
+    const toggle = section.querySelector(".step-toggle");
+    const body = section.querySelector(".step-body");
+    toggle.disabled = locked;
+    toggle.setAttribute("aria-expanded", String(current));
+    body.hidden = !current;
+    section.querySelector(".step-summary").hidden = current || locked;
+    section.querySelector(".step-action").textContent = current ? "Current" : locked ? "Locked" : "Edit";
+  });
+  document.querySelectorAll("[data-step-jump]").forEach((button) => {
+    const number = Number(button.dataset.stepJump);
+    button.disabled = number > maxUnlockedStep;
+    button.removeAttribute("aria-current");
+    button.closest("li").classList.toggle("is-current", number === step);
+    button.closest("li").classList.toggle("is-complete", number < maxUnlockedStep || (maxUnlockedStep === 4 && number < 4));
+    if (number === step) button.setAttribute("aria-current", "step");
+  });
+  workflowCount.textContent = `Step ${step} of 4`;
+  updateWorkflowSummary();
+  if (step === 4) setWorkflowMessage("Review your settings, then generate the signal.");
+  if (focus) {
+    const heading = document.querySelector(`[data-step="${step}"] .step-heading strong`);
+    heading.setAttribute("tabindex", "-1");
+    heading.focus({ preventScroll: true });
+    document.querySelector(`[data-step="${step}"]`).scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+}
+
+function continueWorkflow(nextStep) {
+  if (currentStep === 1 && !text.value.trim()) {
+    setWorkflowMessage("Add a script before continuing.", true);
+    return text.focus();
+  }
+  if (currentStep === 2 && !cloneReady()) {
+    setWorkflowMessage("Add approved reference audio, its transcript, and consent before continuing.", true);
+    return;
+  }
+  maxUnlockedStep = Math.max(maxUnlockedStep, nextStep);
+  setWorkflowMessage(`Step ${currentStep} complete.`);
+  showStep(nextStep);
+}
 
 function setStatus(message, error = false) {
   status.textContent = message;
@@ -91,14 +197,21 @@ function setRecorderState(state) {
   recorderShell.dataset.state = state;
   const labels = {
     ready: "Ready to record",
-    requesting: "Waiting for permission",
-    recording: "Recording",
-    processing: "Preparing preview",
-    review: "Review recording",
+    requesting: "Waiting for microphone permission",
+    recording: "Microphone live",
+    processing: "Preparing your preview",
+    review: "Review your recording",
     accepted: "Recording selected",
     error: "Recording needs attention",
   };
   recorderLabel.textContent = labels[state];
+  recordingLiveLabel.textContent = state === "recording"
+    ? "● RECORDING"
+    : state === "accepted"
+      ? "✓ SELECTED"
+      : state === "requesting"
+        ? "MICROPHONE REQUESTED"
+        : "MICROPHONE OFF";
   startRecordingButton.hidden = !["ready", "error"].includes(state);
   startRecordingButton.textContent = state === "error" ? "Try recording again" : "Start recording";
   stopRecordingButton.hidden = state !== "recording";
@@ -112,6 +225,7 @@ function setRecorderState(state) {
   useRecordingButton.disabled = !active || state !== "review";
   recordAgainButton.disabled = !active || !["review", "accepted"].includes(state);
   setGenerateDisabled();
+  updateStepActions();
 }
 
 function formatTimer(seconds) {
@@ -131,7 +245,87 @@ function clearRecordingTimers() {
   stopTimeout = undefined;
 }
 
+function setMicrophoneLevel(level) {
+  const value = Math.max(0, Math.min(1, level));
+  recorderShell.style.setProperty("--mic-level", value.toFixed(3));
+  recorderShell.style.setProperty("--meter-width", `${Math.max(2, value * 100).toFixed(1)}%`);
+  recorderShell.style.setProperty("--orb-scale", (1 + value * 0.14).toFixed(3));
+  recorderShell.style.setProperty("--ring-one-scale", (1 + value * 0.3).toFixed(3));
+  recorderShell.style.setProperty("--ring-two-scale", (1 + value * 0.5).toFixed(3));
+  recorderShell.style.setProperty("--glow-size", `${(22 + value * 34).toFixed(1)}px`);
+  recorderShell.style.setProperty("--bar-scale", (0.55 + value).toFixed(3));
+}
+
+function stopAudioVisualization() {
+  cancelAnimationFrame(analyserFrame);
+  analyserFrame = undefined;
+  analyserSource?.disconnect();
+  analyser?.disconnect();
+  analyserSource = undefined;
+  analyser = undefined;
+  analyserData = undefined;
+  if (audioContext && audioContext.state !== "closed") audioContext.close().catch(() => {});
+  audioContext = undefined;
+  silenceStarted = undefined;
+  silenceActive = false;
+  smoothedLevel = 0;
+  setMicrophoneLevel(0);
+}
+
+async function startAudioVisualization(stream) {
+  stopAudioVisualization();
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) {
+    recorderShell.classList.add("analysis-fallback");
+    return;
+  }
+  try {
+    audioContext = new AudioContext();
+    if (audioContext.state === "suspended") await audioContext.resume();
+    analyserSource = audioContext.createMediaStreamSource(stream);
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.72;
+    analyserData = new Uint8Array(analyser.fftSize);
+    analyserSource.connect(analyser);
+    recorderShell.classList.remove("analysis-fallback");
+
+    const draw = (now) => {
+      if (!analyser || recorderShell.dataset.state !== "recording") return;
+      analyser.getByteTimeDomainData(analyserData);
+      let energy = 0;
+      for (const sample of analyserData) {
+        const centered = (sample - 128) / 128;
+        energy += centered * centered;
+      }
+      const level = Math.min(1, Math.max(0, (Math.sqrt(energy / analyserData.length) - 0.012) * 8));
+      smoothedLevel += (level - smoothedLevel) * 0.24;
+      setMicrophoneLevel(smoothedLevel);
+
+      if (smoothedLevel < 0.035) {
+        silenceStarted ??= now;
+        if (!silenceActive && now - silenceStarted > 2000) {
+          silenceActive = true;
+          setRecorderFeedback("No sound detected—check your microphone or speak closer.");
+        }
+      } else {
+        silenceStarted = undefined;
+        if (silenceActive) {
+          silenceActive = false;
+          setRecorderFeedback("Sound received. Keep reading naturally.");
+        }
+      }
+      analyserFrame = requestAnimationFrame(draw);
+    };
+    analyserFrame = requestAnimationFrame(draw);
+  } catch {
+    stopAudioVisualization();
+    recorderShell.classList.add("analysis-fallback");
+  }
+}
+
 function releaseMicrophone() {
+  stopAudioVisualization();
   mediaStream?.getTracks().forEach((track) => track.stop());
   mediaStream = undefined;
 }
@@ -282,9 +476,10 @@ async function startRecording() {
       recordingDuration = (performance.now() - recordingStarted) / 1000;
       updateTimer(Math.min(recordingDuration, MAX_RECORDING_SECONDS));
     }, 200);
-    stopTimeout = setTimeout(stopRecording, MAX_RECORDING_SECONDS * 1000);
+    stopTimeout = setTimeout(() => stopRecording(true), MAX_RECORDING_SECONDS * 1000);
     setRecorderState("recording");
-    setRecorderFeedback("Read the prompt naturally. Stop after 15–20 seconds.");
+    await startAudioVisualization(mediaStream);
+    setRecorderFeedback("Sound is measured locally. Read naturally and stop after 15–20 seconds.");
     setStatus("Recording reference audio…");
   } catch (error) {
     releaseMicrophone();
@@ -295,13 +490,13 @@ async function startRecording() {
   }
 }
 
-function stopRecording() {
+function stopRecording(automatic = false) {
   if (mediaRecorder?.state !== "recording") return;
   recordingDuration = Math.min((performance.now() - recordingStarted) / 1000, MAX_RECORDING_SECONDS);
   clearRecordingTimers();
   updateTimer(recordingDuration);
   setRecorderState("processing");
-  setRecorderFeedback("Preparing your private browser preview…");
+  setRecorderFeedback(automatic ? "30-second limit reached. Preparing your preview…" : "Preparing your private browser preview…");
   mediaRecorder.stop();
   releaseMicrophone();
 }
@@ -341,6 +536,7 @@ function finishRecording(activeRecorder, session) {
   setRecorderState("review");
   setRecorderFeedback("Listen back, then choose Use recording or Record again.");
   setStatus("Reference recording ready to review.");
+  updateStepActions();
 }
 
 function useRecording() {
@@ -350,6 +546,8 @@ function useRecording() {
   setRecorderState("accepted");
   setRecorderFeedback("Recording selected. Correct the transcript only if you changed a word.");
   setStatus("Reference recording selected. Confirm consent, then generate.");
+  updateWorkflowSummary();
+  updateStepActions();
 }
 
 document.querySelectorAll(".preset").forEach((button) => {
@@ -360,8 +558,11 @@ document.querySelectorAll(".preset").forEach((button) => {
     });
     button.classList.add("active");
     button.setAttribute("aria-pressed", "true");
+    activePreset = button.textContent;
     text.value = presets[button.dataset.preset];
     updateCount();
+    updateWorkflowSummary();
+    updateStepActions();
     text.focus();
   });
 });
@@ -371,16 +572,29 @@ document.querySelectorAll(".tag").forEach((button) => {
     const start = text.selectionStart;
     text.setRangeText(`${button.dataset.tag} `, start, text.selectionEnd, "end");
     updateCount();
+    updateWorkflowSummary();
     text.focus();
   });
 });
 
 document.querySelectorAll('input[name="voiceMode"]').forEach((radio) => {
-  radio.addEventListener("change", () => setVoiceMode(radio.value));
+  radio.addEventListener("change", () => {
+    setVoiceMode(radio.value);
+    updateWorkflowSummary();
+    updateStepActions();
+  });
 });
 
 document.querySelectorAll('input[name="cloneSource"]').forEach((radio) => {
-  radio.addEventListener("change", () => setCloneSource(radio.value));
+  radio.addEventListener("change", () => {
+    setCloneSource(radio.value);
+    updateWorkflowSummary();
+    updateStepActions();
+  });
+});
+
+document.querySelectorAll('input[name="voicePreset"]').forEach((radio) => {
+  radio.addEventListener("change", updateWorkflowSummary);
 });
 
 [
@@ -391,7 +605,23 @@ document.querySelectorAll('input[name="cloneSource"]').forEach((radio) => {
 ].forEach(([id, format]) => {
   const input = document.querySelector(`#${id}`);
   const output = document.querySelector(`#${id}-value`);
-  input.addEventListener("input", () => { output.value = format(input.value); });
+  input.addEventListener("input", () => {
+    output.value = format(input.value);
+    updateWorkflowSummary();
+  });
+});
+
+form.querySelectorAll("select").forEach((select) => select.addEventListener("change", updateWorkflowSummary));
+
+document.querySelectorAll("[data-next-step]").forEach((button) => {
+  button.addEventListener("click", () => continueWorkflow(Number(button.dataset.nextStep)));
+});
+
+document.querySelectorAll("[data-step-toggle], [data-step-jump], [data-edit-step]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const step = Number(button.dataset.stepToggle || button.dataset.stepJump || button.dataset.editStep);
+    showStep(step);
+  });
 });
 
 function addTake({ blob, firstByte, total, settings, script }) {
@@ -545,8 +775,17 @@ upload.addEventListener("change", () => {
   } else if (file) {
     setStatus(`${file.name} selected. Add its exact transcript and confirm consent.`);
   }
+  updateWorkflowSummary();
+  updateStepActions();
 });
-text.addEventListener("input", updateCount);
+text.addEventListener("input", () => {
+  activePreset = "Custom";
+  updateCount();
+  updateWorkflowSummary();
+  updateStepActions();
+});
+transcript.addEventListener("input", updateStepActions);
+consent.addEventListener("change", updateStepActions);
 window.addEventListener("pagehide", () => {
   recorderSession += 1;
   clearRecordingTimers();
@@ -563,3 +802,6 @@ if (!canRecord) {
 
 updateCount();
 setVoiceMode("preset");
+updateWorkflowSummary();
+updateStepActions();
+showStep(1, false);

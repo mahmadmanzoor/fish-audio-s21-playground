@@ -12,7 +12,8 @@ The product includes:
 - System-aware light and dark themes with a persistent theme toggle
 - Narration, agent, Urdu, Spanish, and Arabic sample scripts
 - Six curated voice profiles plus consent-led voice cloning
-- Native browser recording with upload fallback
+- A guided Script → Voice → Delivery → Review workflow
+- Native browser recording with reactive microphone feedback and upload fallback
 - Speed, volume, temperature, diversity, and latency controls
 - MP3, WAV, and Opus playback and downloads
 - First-byte time, completion time, and output size for each generated take
@@ -63,12 +64,12 @@ Browser recording uses the native `MediaRecorder` API and requires microphone pe
 
 ## Evaluation flow
 
-1. Open `/lab`, select **Narration**, and keep the **Balanced** voice.
-2. Generate the first signal, then play the result under **Session takes**.
-3. Compare first-byte time, completion time, and file size.
-4. Switch between `normal`, `balanced`, and `low` latency modes.
-5. Try multilingual presets and adjust delivery controls.
-6. Compare curated accents or test an approved browser recording or upload.
+1. In **Script**, select Narration or write the words you want to hear.
+2. In **Voice**, keep Balanced, choose a curated profile, or add an approved clone.
+3. In **Delivery**, choose speed, volume, latency, format, and variation.
+4. In **Review**, check the summary and generate the signal.
+5. Play the result under **Session takes** and compare first-byte time, completion time, and file size.
+6. Reopen any completed step, change one variable, and generate another take.
 7. Download useful takes as MP3, WAV, or Opus files.
 
 Generated takes remain in the current browser tab and disappear on refresh.
@@ -85,7 +86,7 @@ Generated takes remain in the current browser tab and disappear on refresh.
 | Male · Indian English | Calm, clear professional speech |
 | Voice clone | Record or upload approved reference audio with its exact transcript |
 
-Signal Tank requires consent confirmation before sending clone audio. Browser recordings must be at least 10 seconds, stop automatically at 30 seconds, and remain in memory until generation. The 4 MB audio cap leaves room for multipart fields within Vercel’s function request limit.
+Signal Tank requires consent confirmation before sending clone audio. Browser recordings must be at least 10 seconds, stop automatically at 30 seconds, and remain in memory until generation. A local microphone analyser drives the recording orb and level meter without transmitting or copying the audio. The 4 MB audio cap leaves room for multipart fields within Vercel’s function request limit.
 
 ## Local API
 

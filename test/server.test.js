@@ -149,6 +149,13 @@ test("the UI contains curated profiles and missing configuration is reported saf
   assert.match(page, /Voice Lab — Signal Tank/);
   assert.match(page, /Female · American/);
   assert.match(page, /Start recording/);
+  assert.match(page, /data-step="1"/);
+  assert.match(page, /data-step="2"/);
+  assert.match(page, /data-step="3"/);
+  assert.match(page, /data-step="4"/);
+  assert.match(page, /id="review-script"/);
+  assert.match(page, /sonar-recorder-visual/);
+  assert.match(page, /id="microphone-level"/);
   assert.doesNotMatch(page, /Saved|Voice ID|Refresh voices/);
 
   const response = await tts.fetch(new Request("http://localhost/api/tts", {
@@ -160,6 +167,13 @@ test("the UI contains curated profiles and missing configuration is reported saf
 
   if (original) process.env.SIGNAL_TANK_API_KEY = original;
   if (legacy) process.env.FISH_API_KEY = legacy;
+});
+
+test("navigation compacts down and expands up", async () => {
+  const source = await readFile(new URL("../public/site.js", import.meta.url), "utf8");
+  assert.match(source, /currentScrollY > lastScrollY\) compact = true/);
+  assert.match(source, /currentScrollY < lastScrollY\) compact = false/);
+  assert.match(source, /currentScrollY === 0\) compact = false/);
 });
 
 test("Vercel TTS function validates input before requiring a key", async () => {
