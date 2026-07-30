@@ -81,7 +81,7 @@
           <section id="quick-start" data-reveal>
             <p class="section-number">01</p>
             <h2>Quick start</h2>
-            <p class="lead">Begin with the default voice. It gives you a clean baseline before reference selection changes the result.</p>
+            <p class="lead">Begin with the Balanced profile. It gives you a clean baseline before voice character changes the result.</p>
             <ol class="guide-steps">
               <li><span>1</span><div><h3>Use the narration preset</h3><p>Generate it unchanged and listen for clarity, pauses, warmth, and how the expression tags land.</p></div></li>
               <li><span>2</span><div><h3>Change one variable</h3><p>Switch latency mode, speed, or voice—but only one at a time—so the comparison remains useful.</p></div></li>
@@ -91,21 +91,25 @@
 
           <section id="voice-sources" data-reveal>
             <p class="section-number">02</p>
-            <h2>Choose the right voice source</h2>
+            <h2>Choose a profile or clone</h2>
             <div class="guide-table-wrap">
               <table>
-                <thead><tr><th>Source</th><th>Best for</th><th>What it needs</th></tr></thead>
+                <thead><tr><th>Voice</th><th>Character</th><th>Useful for</th></tr></thead>
                 <tbody>
-                  <tr><td>Default</td><td>First impressions</td><td>Nothing extra</td></tr>
-                  <tr><td>Saved</td><td>Known account voices</td><td>A configured API key</td></tr>
-                  <tr><td>Voice ID</td><td>Saved or public references</td><td>A compatible reference ID</td></tr>
-                  <tr><td>Instant clone</td><td>Zero-shot comparison</td><td>Approved audio and exact transcript</td></tr>
+                  <tr><td>Balanced</td><td>Natural and flexible</td><td>A clean baseline</td></tr>
+                  <tr><td>Female · American</td><td>Bright and friendly</td><td>Conversation and narration</td></tr>
+                  <tr><td>Male · American</td><td>Clear and energetic</td><td>Promotional delivery</td></tr>
+                  <tr><td>Female · British</td><td>Crisp and professional</td><td>Education and explainers</td></tr>
+                  <tr><td>Male · British</td><td>Deep and measured</td><td>Authoritative narration</td></tr>
+                  <tr><td>Male · Indian English</td><td>Calm and clear</td><td>Professional speech</td></tr>
+                  <tr><td>Voice clone</td><td>Your approved speaker</td><td>A reference clip and exact transcript</td></tr>
                 </tbody>
               </table>
             </div>
             <div class="callout">
-              <strong>For instant cloning</strong>
-              <p>Use a clean recording of at least 10 seconds. Signal Tank accepts up to 4 MB and requires confirmation that the speaker approved the clone.</p>
+              <strong>For voice cloning</strong>
+              <p>Record in the browser or upload clean audio with one speaker. Aim for 15–20 seconds; the minimum is 10 seconds, the recorder stops at 30, and every clip must be 4 MB or smaller.</p>
+              <p>Microphone access is requested only after you press Start recording. The clip stays in browser memory until you press Generate. If recording is unavailable or blocked, switch to Upload audio.</p>
             </div>
           </section>
 
@@ -138,7 +142,8 @@ npm start</code></pre>
             <p>The lab posts multipart form data to the server. A minimal browser request looks like this:</p>
             <pre><code>const form = new FormData();
 form.set("text", "Hello from Signal Tank.");
-form.set("voiceMode", "default");
+form.set("voiceMode", "preset");
+form.set("voicePreset", "balanced");
 form.set("format", "mp3");
 form.set("latency", "balanced");
 
@@ -149,13 +154,13 @@ const response = await fetch("/api/tts", {
 
 const audio = new Audio(URL.createObjectURL(await response.blob()));
 audio.play();</code></pre>
-            <p>Use <code>GET /api/voices</code> for account-owned voice IDs. Signal Tank keeps model selection and credentials on the server.</p>
+            <p>Available preset values are <code>balanced</code>, <code>female-american</code>, <code>male-american</code>, <code>female-british</code>, <code>male-british</code>, and <code>male-indian</code>. Signal Tank keeps their internal mapping and credentials on the server.</p>
           </section>
 
           <section id="privacy" data-reveal>
             <p class="section-number">06</p>
             <h2>Privacy and consent</h2>
-            <p>Signal Tank does not persist scripts, generated audio, or uploaded reference recordings. Generated takes disappear when the page refreshes.</p>
+            <p>Signal Tank does not persist scripts, generated audio, uploaded references, or browser recordings. Recorded clips stay in memory until generation and generated takes disappear when the page refreshes.</p>
             <p>An upstream processing partner may retain requests. Do not submit confidential text, and clone a voice only when the speaker has explicitly approved that use.</p>
           </section>
         </div>

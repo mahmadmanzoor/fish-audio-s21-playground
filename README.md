@@ -11,7 +11,8 @@ The product includes:
 - Product principles and privacy posture at `/about`
 - System-aware light and dark themes with a persistent theme toggle
 - Narration, agent, Urdu, Spanish, and Arabic sample scripts
-- Default, saved, reference-ID, and instant-clone voice modes
+- Six curated voice profiles plus consent-led voice cloning
+- Native browser recording with upload fallback
 - Speed, volume, temperature, diversity, and latency controls
 - MP3, WAV, and Opus playback and downloads
 - First-byte time, completion time, and output size for each generated take
@@ -48,6 +49,8 @@ Open [http://127.0.0.1:3000](http://127.0.0.1:3000), then choose **Open Lab**. Y
 
 The Node server reads the API key. Browser code cannot access it, and Git ignores `.env`.
 
+Browser recording uses the native `MediaRecorder` API and requires microphone permission. It works on localhost during development; deployed sites must use HTTPS. If a browser cannot record WebM, MP4, or Ogg audio, the lab keeps the normal audio-upload fallback available.
+
 ## Deploy to Vercel
 
 1. Import this repository at [vercel.com/new](https://vercel.com/new).
@@ -60,12 +63,12 @@ The Node server reads the API key. Browser code cannot access it, and Git ignore
 
 ## Evaluation flow
 
-1. Open `/lab`, select **Narration**, and keep the **Default** voice.
+1. Open `/lab`, select **Narration**, and keep the **Balanced** voice.
 2. Generate the first signal, then play the result under **Session takes**.
 3. Compare first-byte time, completion time, and file size.
 4. Switch between `normal`, `balanced`, and `low` latency modes.
 5. Try multilingual presets and adjust delivery controls.
-6. Select a saved voice, paste a compatible reference ID, or test an approved recording.
+6. Compare curated accents or test an approved browser recording or upload.
 7. Download useful takes as MP3, WAV, or Opus files.
 
 Generated takes remain in the current browser tab and disappear on refresh.
@@ -74,21 +77,23 @@ Generated takes remain in the current browser tab and disappear on refresh.
 
 | Source | Use |
 | --- | --- |
-| Default | Use the product’s house voice |
-| Saved | Load up to 100 account-owned voices |
-| Voice ID | Use a saved or compatible public reference |
-| Instant clone | Upload approved reference audio up to 4 MB with its exact transcript |
+| Balanced | Use the product’s flexible house voice |
+| Female · American | Bright, friendly conversation and narration |
+| Male · American | Clear, energetic delivery |
+| Female · British | Crisp, professional delivery |
+| Male · British | Deep, measured narration |
+| Male · Indian English | Calm, clear professional speech |
+| Voice clone | Record or upload approved reference audio with its exact transcript |
 
-Signal Tank requires consent confirmation before sending clone audio. The 4 MB audio cap leaves room for multipart fields within Vercel’s function request limit.
+Signal Tank requires consent confirmation before sending clone audio. Browser recordings must be at least 10 seconds, stop automatically at 30 seconds, and remain in memory until generation. The 4 MB audio cap leaves room for multipart fields within Vercel’s function request limit.
 
 ## Local API
 
 | Method | Route | Result |
 | --- | --- | --- |
-| `GET` | `/api/voices` | Account-owned voice IDs and titles |
 | `POST` | `/api/tts` | Generated audio from multipart form data |
 
-The server validates voice selection, file type and size, and synthesis ranges before contacting the configured voice service.
+The server maps preset slugs to curated voice references and validates voice selection, file type and size, consent, and synthesis ranges before contacting the configured voice service. Manual voice IDs are rejected.
 
 ## Request logs
 
@@ -101,7 +106,8 @@ Logs contain request IDs, settings, character counts, response status, timing, a
 ```js
 const form = new FormData();
 form.set("text", "Hello from Signal Tank.");
-form.set("voiceMode", "default");
+form.set("voiceMode", "preset");
+form.set("voicePreset", "balanced");
 form.set("format", "mp3");
 form.set("latency", "balanced");
 
@@ -120,11 +126,11 @@ audio.play();
 npm test
 ```
 
-The tests cover request mapping, instant-clone consent, upload limits, safe log metadata, sanitized errors, function behavior, and all clean page routes.
+The tests cover preset mapping, clone consent, upload limits, safe log metadata, sanitized errors, function behavior, and all clean page routes.
 
 ## Privacy
 
-Signal Tank does not persist generated audio or uploaded reference files. An upstream processing partner may retain requests, so avoid confidential scripts and recordings. Upload a voice only when the speaker has approved cloning.
+Signal Tank does not persist generated audio, uploaded reference files, or browser recordings. Microphone access is requested only after pressing Start recording and tracks are released after stopping. An upstream processing partner may retain requests, so avoid confidential scripts and recordings. Clone a voice only when the speaker has approved that use.
 
 ## Current limit
 

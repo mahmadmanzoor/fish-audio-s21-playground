@@ -97,39 +97,89 @@
         <section class="panel voice-panel" aria-labelledby="voice-title" data-reveal>
           <div class="panel-head">
             <div><span class="panel-number">02</span><h2 id="voice-title">Voice source</h2></div>
-            <button id="refresh-voices" class="text-button" type="button">Refresh voices</button>
+            <span class="muted mono">Select or clone</span>
           </div>
 
           <fieldset class="voice-tabs">
             <legend class="sr-only">Choose one voice source</legend>
-            <label><input type="radio" name="voiceMode" value="default" checked><span>Default</span></label>
-            <label><input type="radio" name="voiceMode" value="saved"><span>Saved</span></label>
-            <label><input type="radio" name="voiceMode" value="id"><span>Voice ID</span></label>
-            <label><input type="radio" name="voiceMode" value="clone"><span>Instant clone</span></label>
+            <label><input type="radio" name="voiceMode" value="preset" checked><span>Choose a voice</span></label>
+            <label><input type="radio" name="voiceMode" value="clone"><span>Clone a voice</span></label>
           </fieldset>
 
           <div class="voice-content">
-            <div class="voice-mode" data-mode="default">
-              <p class="mode-title">Use the house voice</p>
-              <p class="muted">Useful for hearing the model before choosing a specific voice.</p>
-            </div>
-            <div class="voice-mode" data-mode="saved" hidden>
-              <label for="saved-voice">Your saved voices</label>
-              <select id="saved-voice" autocomplete="off" disabled><option value="">Loading voices…</option></select>
-              <p id="voices-note" class="field-note">Read-only: this lab cannot create or delete voices.</p>
-            </div>
-            <div class="voice-mode" data-mode="id" hidden>
-              <label for="voice-id">Voice reference ID</label>
-              <input id="voice-id" type="text" autocomplete="off" spellcheck="false" placeholder="802e3bc2b27e49c2995d23ef70e6ac89" disabled>
+            <div class="voice-mode" data-mode="preset">
+              <fieldset class="voice-profiles">
+                <legend>Voice profile</legend>
+                <label>
+                  <input type="radio" name="voicePreset" value="balanced" checked>
+                  <span><strong>Balanced</strong><small>Natural · flexible house voice</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="voicePreset" value="female-american">
+                  <span><strong>Female · American</strong><small>Bright · friendly · conversational</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="voicePreset" value="male-american">
+                  <span><strong>Male · American</strong><small>Clear · energetic · promotional</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="voicePreset" value="female-british">
+                  <span><strong>Female · British</strong><small>Crisp · friendly · professional</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="voicePreset" value="male-british">
+                  <span><strong>Male · British</strong><small>Deep · measured · authoritative</small></span>
+                </label>
+                <label>
+                  <input type="radio" name="voicePreset" value="male-indian">
+                  <span><strong>Male · Indian English</strong><small>Calm · clear · professional</small></span>
+                </label>
+              </fieldset>
             </div>
             <div class="voice-mode" data-mode="clone" hidden>
-              <label for="reference-audio">Reference recording</label>
-              <input id="reference-audio" type="file" accept="audio/*" disabled>
-              <p class="field-note">A clean recording of at least 10 seconds works best. Maximum 4 MB on Vercel.</p>
+              <fieldset class="voice-tabs clone-source-tabs">
+                <legend class="sr-only">Choose how to provide reference audio</legend>
+                <label><input type="radio" name="cloneSource" value="record" checked disabled><span>Record now</span></label>
+                <label><input type="radio" name="cloneSource" value="upload" disabled><span>Upload audio</span></label>
+              </fieldset>
+
+              <div class="clone-source" data-clone-source="record">
+                <div id="recorder" class="recorder" data-state="ready">
+                  <div class="recorder-head">
+                    <span class="recording-state"><i aria-hidden="true"></i><span id="recording-label">Ready to record</span></span>
+                    <time id="recording-timer" datetime="PT0S">00:00</time>
+                  </div>
+                  <div class="read-prompt">
+                    <span>Read this naturally</span>
+                    <blockquote>Hello, I’m recording a clear sample of my natural voice. This morning, I walked through a quiet garden, watched bright birds cross the blue sky, and wondered how thoughtful technology could make everyday conversations warmer, clearer, and more human.</blockquote>
+                  </div>
+                  <p class="field-note">Use one speaker in a quiet room. Aim for 15–20 seconds; recordings must be at least 10 seconds and stop automatically at 30.</p>
+                  <div class="recorder-actions">
+                    <button id="start-recording" class="record-button" type="button" disabled>
+                      <span aria-hidden="true"></span> Start recording
+                    </button>
+                    <button id="stop-recording" class="record-button stop" type="button" hidden disabled>Stop recording</button>
+                    <button id="use-recording" class="record-button" type="button" hidden disabled>Use recording</button>
+                    <button id="record-again" class="text-button" type="button" hidden disabled>Record again</button>
+                  </div>
+                  <div id="recording-review" class="recording-review" hidden>
+                    <audio id="recording-audio" controls preload="metadata"></audio>
+                    <p id="recording-meta" class="field-note"></p>
+                  </div>
+                  <p id="recorder-feedback" class="recorder-feedback" role="status" aria-live="polite">Microphone access is requested only after you press Start recording.</p>
+                </div>
+              </div>
+
+              <div class="clone-source" data-clone-source="upload" hidden>
+                <label for="reference-audio">Reference recording</label>
+                <input id="reference-audio" name="referenceAudio" type="file" accept="audio/*" disabled>
+                <p class="field-note">Use clean audio with one speaker. Maximum 4 MB.</p>
+              </div>
+
               <label for="reference-text">Exact words spoken</label>
-              <textarea id="reference-text" rows="3" dir="auto" placeholder="Transcribe the recording exactly…" disabled></textarea>
+              <textarea id="reference-text" name="referenceText" rows="4" dir="auto" placeholder="Transcribe the recording exactly…" readonly disabled></textarea>
               <label class="consent">
-                <input id="consent" type="checkbox" value="yes" disabled>
+                <input id="consent" name="consent" type="checkbox" value="yes" disabled>
                 <span>I have the speaker’s permission to clone this voice.</span>
               </label>
             </div>

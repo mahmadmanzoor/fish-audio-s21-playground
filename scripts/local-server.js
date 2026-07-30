@@ -4,7 +4,6 @@ import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
 import tts from "../api/tts.js";
-import voices from "../api/voices.js";
 
 const PORT = Number(process.env.PORT || 3000);
 const PUBLIC = join(fileURLToPath(new URL("../", import.meta.url)), "public");
@@ -35,6 +34,7 @@ async function serveFile(request, response) {
   response.writeHead(200, {
     "Content-Type": TYPES[extname(filename)],
     "Cache-Control": "no-store",
+    "Permissions-Policy": "microphone=(self)",
     "X-Content-Type-Options": "nosniff",
   });
   response.end(body);
@@ -59,7 +59,6 @@ export function createApp() {
   return createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, "http://localhost").pathname;
-      if (pathname === "/api/voices") return runFunction(voices, request, response);
       if (pathname === "/api/tts") return runFunction(tts, request, response);
       if (request.method === "GET" && (await serveFile(request, response))) return;
       response.writeHead(404, { "Content-Type": "application/json; charset=utf-8" });

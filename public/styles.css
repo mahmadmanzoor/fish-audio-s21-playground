@@ -1174,7 +1174,7 @@ input::placeholder {
 
 .voice-tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   margin: 0;
   padding: 4px;
   border: 1px solid var(--line);
@@ -1223,11 +1223,10 @@ input::placeholder {
 }
 
 .voice-content {
-  min-height: 198px;
   padding-top: 28px;
 }
 
-.voice-mode label,
+.voice-mode > label,
 .control-grid label > span:first-child {
   display: block;
   margin-bottom: 9px;
@@ -1247,6 +1246,11 @@ input::placeholder {
   margin-bottom: 16px;
 }
 
+.voice-mode textarea[readonly] {
+  color: var(--muted);
+  background: var(--bg-soft);
+}
+
 .voice-mode input[type="file"] {
   width: 100%;
   min-height: 44px;
@@ -1264,6 +1268,291 @@ input::placeholder {
   color: var(--muted);
   font-size: .74rem;
   line-height: 1.5;
+}
+
+.voice-profiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.voice-profiles legend {
+  grid-column: 1 / -1;
+  margin-bottom: 3px;
+  color: var(--ink-soft);
+  font-size: .76rem;
+  font-weight: 620;
+}
+
+.voice-profiles label {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.voice-profiles input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.voice-profiles label > span {
+  position: relative;
+  display: flex;
+  min-height: 96px;
+  padding: 17px 16px;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background:
+    linear-gradient(135deg, var(--surface-strong), var(--surface));
+  box-shadow: 0 8px 24px transparent;
+  transition: border-color 220ms ease, box-shadow 280ms ease, transform 300ms var(--ease), background-color 220ms ease;
+}
+
+.voice-profiles label > span::before {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: var(--signal);
+  content: "";
+  opacity: 0;
+  transform: scaleX(.3);
+  transform-origin: left;
+  transition: opacity 180ms ease, transform 300ms var(--ease);
+}
+
+.voice-profiles strong {
+  color: var(--ink);
+  font-size: .86rem;
+  font-weight: 680;
+  line-height: 1.3;
+}
+
+.voice-profiles small {
+  color: var(--muted);
+  font-size: .68rem;
+  line-height: 1.4;
+}
+
+.voice-profiles label:hover > span {
+  border-color: var(--aqua);
+  box-shadow: 0 12px 30px var(--aqua-soft);
+  transform: translateY(-2px);
+}
+
+.voice-profiles input:checked + span {
+  border-color: var(--aqua);
+  background:
+    radial-gradient(circle at 100% 0%, var(--signal-soft), transparent 54%),
+    var(--surface-strong);
+  box-shadow: 0 12px 34px var(--aqua-soft);
+}
+
+.voice-profiles input:checked + span::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.voice-profiles input:focus-visible + span {
+  outline: 3px solid var(--aqua);
+  outline-offset: 3px;
+}
+
+.clone-source-tabs {
+  margin-bottom: 20px;
+}
+
+.clone-source {
+  animation: enter 300ms var(--ease) both;
+}
+
+.recorder {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 100% 0%, var(--aqua-soft), transparent 50%),
+    var(--bg-soft);
+}
+
+.recorder-head {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .66rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.recording-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recording-state i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 0 0 4px transparent;
+}
+
+.recorder[data-state="recording"] .recording-state i {
+  background: var(--danger);
+  animation: recording-pulse 1.2s ease-in-out infinite;
+}
+
+.recorder[data-state="accepted"] .recording-state i {
+  background: var(--signal);
+  box-shadow: 0 0 0 4px var(--signal-soft);
+}
+
+.recorder[data-state="error"] .recording-state i {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px var(--danger-soft);
+}
+
+#recording-timer {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.read-prompt {
+  position: relative;
+  margin-bottom: 12px;
+  padding: 16px 16px 16px 19px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+}
+
+.read-prompt::before {
+  position: absolute;
+  inset: 14px auto 14px 0;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  background: var(--signal);
+  content: "";
+}
+
+.read-prompt > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--aqua);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.read-prompt blockquote {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: .84rem;
+  line-height: 1.58;
+}
+
+.recorder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.record-button {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 10px 15px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--aqua);
+  border-radius: 12px;
+  color: var(--surface-strong);
+  background: var(--aqua);
+  font-size: .74rem;
+  font-weight: 700;
+  transition: color 180ms ease, background-color 180ms ease, box-shadow 220ms ease, transform 220ms var(--ease);
+}
+
+.record-button > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.record-button:hover {
+  box-shadow: 0 10px 24px var(--aqua-soft);
+  transform: translateY(-2px);
+}
+
+.record-button:active {
+  transform: scale(.97);
+}
+
+.record-button.stop {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.record-button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+  transform: none;
+}
+
+.recorder-actions .text-button {
+  min-height: 44px;
+  margin-left: 2px;
+}
+
+.recording-review {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.recording-review audio {
+  width: 100%;
+  height: 40px;
+}
+
+.recording-review p {
+  margin: 8px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.recorder-feedback {
+  min-height: 1.5em;
+  margin: 13px 0 0;
+  color: var(--muted);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.recorder-feedback.error {
+  color: var(--danger);
+  font-weight: 650;
 }
 
 .consent {
@@ -1378,7 +1667,7 @@ summary:hover {
 }
 
 .status.error {
-  color: #7e2017;
+  color: var(--danger);
   font-weight: 700;
 }
 
@@ -2144,6 +2433,13 @@ pre code {
   from {
     opacity: 0;
     transform: translateY(-8px);
+  }
+}
+
+@keyframes recording-pulse {
+  50% {
+    box-shadow: 0 0 0 7px var(--danger-soft);
+    transform: scale(.86);
   }
 }
 
